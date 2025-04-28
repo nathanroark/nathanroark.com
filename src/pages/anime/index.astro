@@ -19,7 +19,7 @@ const posts = (await getCollection('anime')).sort((a, b) => {
 
 <Layout title="Favorite Anime" description="My favorite anime.">
   <div
-    class="px-auto container mx-auto grid w-full max-w-3xl grid-cols-2 flex-wrap items-center gap-6 px-4 pb-12 pt-4 sm:grid-cols-3 lg:px-0"
+    class="container mx-auto grid w-full max-w-4xl grid-cols-2 flex-wrap items-center gap-6 px-4 pb-12 pt-4 sm:grid-cols-3 lg:px-0"
   >
     {
       posts.map((post: any) => (
