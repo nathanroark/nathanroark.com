@@ -1,10 +1,11 @@
 ---
-artist: "Pasteboard"
-album: "Glitter"
-release_date: "2005-12-21"
-genres: ["Dream Pop", "Shoegaze", "Indie Pop"]
-cover_art_url: "/assets/music/pasteboard-glitter.jpeg"
-post_date: "2023-01-01"
+artist: 'Pasteboard'
+album: 'Glitter'
+release_date: '2005-12-21'
+genres: ['Dream Pop', 'Shoegaze', 'Indie Pop']
+cover_art_url: '/assets/music/pasteboard-glitter.jpeg'
+post_date: '2023-01-01'
+rating: 10
 ---
 
 ## Track Listing
