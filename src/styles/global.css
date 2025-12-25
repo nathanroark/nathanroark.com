@@ -1,4 +1,6 @@
 @import "tailwindcss";
+@plugin "@tailwindcss/typography";
+/* @plugin "prettier-plugin-tailwind"; */
 
 @custom-variant dark (&:is(.dark *));
 

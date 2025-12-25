@@ -1,27 +1,40 @@
 ---
-import { getCollection, getEntry } from 'astro:content'
-import StreamingLinks from '@/components/streaming-links.astro'
-import Layout from '@/layouts/content-layout.astro'
-import { Image } from 'astro:assets'
-import BackdropSection from '@/components/backdrop-section.astro'
+import { getCollection, getEntry, render } from "astro:content";
+import StreamingLinks from "@/components/streaming-links.astro";
+import Layout from "@/layouts/content-layout.astro";
+import { Image } from "astro:assets";
+import BackdropSection from "@/components/backdrop-section.astro";
 
 // Static paths: only return params (no props)
 export async function getStaticPaths() {
-  const posts = await getCollection('albums')
+  const posts = await getCollection("music");
   return posts.map((post) => ({
-    params: { slug: post.slug },
-  }))
+    // Remove .md extension from the slug
+    params: { slug: post.id.replace(/\.md$/, "") },
+  }));
 }
 
 // In the page: refetch the entry so we have methods like .render()
-const { slug } = Astro.params
-const post = await getEntry('albums', slug!)
-if (!post) throw new Error('Not found')
+const { slug } = Astro.params;
 
-const { Content } = await post.render()
+// Try to get the entry with .md extension added back
+let post = await getEntry("music", `${slug}.md`);
 
-const ogUrl = new URL(`/og/${post.slug}.png`, Astro.site)
-const release = new Date(post.data.release_date)
+// If that doesn't work, try without the extension (in case it's already included)
+if (!post) {
+  post = await getEntry("music", slug!);
+}
+
+if (!post) throw new Error("Not found");
+
+// Use the render function instead of calling .render() on the entry
+const { Content } = await render(post);
+
+// Get clean slug for URLs (without .md)
+const cleanSlug = post.id.replace(/\.md$/, "");
+// const ogUrl = new URL(`/og/${cleanSlug}.png`, Astro.site);
+const ogUrl = new URL(`/og/${cleanSlug}.png`, Astro.site);
+const release = new Date(post.data.release_date);
 ---
 
 <Layout
@@ -36,11 +49,11 @@ const release = new Date(post.data.release_date)
     >
       <Image
         src={post.data.cover_art_url}
-        alt={post.slug}
+        alt={cleanSlug}
         width="300"
         height="300"
         class="relative z-10 mx-auto block aspect-square rounded-md bg-white"
-        style={`view-transition-name: transition-${post.slug};`}
+        style={`view-transition-name: transition-${cleanSlug};`}
       />
 
       <div
@@ -48,7 +61,9 @@ const release = new Date(post.data.release_date)
       >
         <h1 class="text-5xl font-bold tracking-tight">{post.data.album}</h1>
         <p class="mt-3 text-3xl">{post.data.artist}</p>
-        <p class="mt-2 text-lg">{post.data.genres[0]} — {release.toLocaleDateString()}</p>
+        <p class="mt-2 text-lg">
+          {post.data.genres[0]} — {release.toLocaleDateString()}
+        </p>
       </div>
     </div>
   </div>

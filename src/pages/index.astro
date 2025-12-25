@@ -1,62 +1,71 @@
 ---
-import Layout from '@/layouts/layout.astro'
-import UnderlineLink from '@/components/underline-link.astro'
-import Card from '@/components/card.astro'
-import AlbumCard from '@/components/album-card.astro'
-import { getCollection } from 'astro:content'
-import ArrowRight from '@/components/icons/arrow-right.astro'
+import Layout from "@/layouts/layout.astro";
+import UnderlineLink from "@/components/underline-link.astro";
+import Card from "@/components/card.astro";
+import AlbumCard from "@/components/album-card.astro";
+import { getCollection } from "astro:content";
+import ArrowRight from "@/components/icons/arrow-right.astro";
 
 // Get all albums sorted by release date (newest first)
-const allAlbums = (await getCollection('albums')).sort((a, b) =>
+const allAlbums = (await getCollection("music")).sort((a, b) =>
   new Date(a.data.release_date) > new Date(b.data.release_date) ? -1 : 1,
-)
+);
 
 // Get current year
-const currentYear = new Date().getFullYear()
+const currentYear = new Date().getFullYear();
 
 // Get albums from this year
 const thisYearAlbums = allAlbums.filter(
   (album) => new Date(album.data.release_date).getFullYear() === currentYear,
-)
+);
 
 // Decide which set to use
-let musicPosts
+let musicPosts;
 if (thisYearAlbums.length >= 10) {
   // If we have 10 or more albums this year, use those
-  musicPosts = thisYearAlbums.sort((a, b) => (b.data.score ?? 0) - (a.data.score ?? 0)).slice(0, 10)
+  musicPosts = thisYearAlbums
+    .sort((a, b) => (b.data.score ?? 0) - (a.data.score ?? 0))
+    .slice(0, 10);
 } else {
   // Otherwise, take the 10 most recent albums from all time
-  musicPosts = allAlbums.slice(0, 10).sort((a, b) => (b.data.score ?? 0) - (a.data.score ?? 0))
+  musicPosts = allAlbums
+    .slice(0, 10)
+    .sort((a, b) => (b.data.score ?? 0) - (a.data.score ?? 0));
 }
 
-const bookPosts = (await getCollection('books'))
+const bookPosts = (await getCollection("books"))
   .sort((a, b) => (new Date(a.data.read) > new Date(b.data.read) ? -1 : 1))
-  .slice(0, 10)
+  .slice(0, 10);
 
-const animePosts = (await getCollection('anime'))
+const animePosts = (await getCollection("anime"))
   .sort((a, b) => {
-    const getDate = (x: any) => x.data.releaseDate ?? x.data.startDate
+    const getDate = (x: any) => x.data.releaseDate ?? x.data.startDate;
     const ad = getDate(a),
-      bd = getDate(b)
-    if (!ad && !bd) return 0
-    if (!ad) return 1
-    if (!bd) return -1
-    return ad > bd ? -1 : 1
+      bd = getDate(b);
+    if (!ad && !bd) return 0;
+    if (!ad) return 1;
+    if (!bd) return -1;
+    return ad > bd ? -1 : 1;
   })
-  .slice(0, 10)
+  .slice(0, 10);
 
-const moviePosts = (await getCollection('movies'))
+const moviePosts = (await getCollection("movies"))
   // .sort((a, b) => (new Date(a.data.release_date) > new Date(b.data.release_date) ? -1 : 1))
   // .slice(0, 10)
   .sort((a, b) => (b.data.score ?? 0) - (a.data.score ?? 0))
-  .slice(0, 10)
+  .slice(0, 10);
 ---
 
-<Layout title="Nathan's Blog" description="A blog about music, movies, anime, and books I like.">
+<Layout
+  title="Nathan's Blog"
+  description="A blog about music, movies, anime, and books I like."
+>
   <div class="mx-auto flex w-full flex-col space-y-16 pt-4">
     <div>
       <h1 class="text-5xl font-bold">Nathan's Blog</h1>
-      <p class="text-xl">A blog for me to post about music, movies, anime, and books.</p>
+      <p class="text-xl">
+        A blog for me to post about music, movies, anime, and books.
+      </p>
     </div>
 
     {/* Music */}
@@ -108,7 +117,9 @@ const moviePosts = (await getCollection('movies'))
               imgSrc={post.data.cover_art_url}
               imgAlt={post.data.title}
               title={post.data.title}
-              subtitle={post.data.director ? post.data.director : post.data.studio}
+              subtitle={
+                post.data.director ? post.data.director : post.data.studio
+              }
               transitionName={`record-${post.slug}`}
               ariaLabel={`${post.data.title} directed by ${post.data.director ? post.data.director : post.data.studio}`}
             />
