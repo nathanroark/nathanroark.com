@@ -45,19 +45,19 @@ const release = new Date(post.data.release_date);
   <div class="relative">
     <BackdropSection imgSrc={post.data.cover_art_url} />
     <div
-      class="mx-auto flex flex-col items-start overflow-hidden border-b border-gray-800 px-4 py-8 md:max-w-5xl md:flex-row md:items-end md:space-x-8"
+      class="mx-auto flex flex-col items-start overflow-hidden px-4 py-8 md:max-w-5xl md:flex-row md:items-end"
     >
       <Image
         src={post.data.cover_art_url}
         alt={cleanSlug}
         width="300"
         height="300"
-        class="relative z-10 mx-auto block aspect-square rounded-md bg-white"
+        class="relative z-10 mx-auto block aspect-square rounded md:mr-8"
         style={`view-transition-name: transition-${cleanSlug};`}
       />
 
       <div
-        class="relative z-10 flex flex-1 flex-col justify-end pt-8 text-white [text-shadow:_0_2px_6px_rgb(0_0_0_/_0.6)]"
+        class="relative z-10 flex flex-1 flex-col justify-end pt-8 text-white [text-shadow:0_2px_6px_rgb(0_0_0/0.6)]"
       >
         <h1 class="text-5xl font-bold tracking-tight">{post.data.album}</h1>
         <p class="mt-3 text-3xl">{post.data.artist}</p>
@@ -69,7 +69,7 @@ const release = new Date(post.data.release_date);
   </div>
 
   <div
-    class="md:prose-md prose mx-auto px-6 py-8 dark:prose-invert md:prose-lg xl:prose-xl lg:px-0"
+    class="md:prose-md prose dark:prose-invert md:prose-lg xl:prose-xl mx-auto px-6 py-8 lg:px-0"
   >
     {
       post.data.links && (
