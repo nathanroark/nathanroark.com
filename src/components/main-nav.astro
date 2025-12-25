@@ -1,0 +1,30 @@
+---
+import { siteConfig } from '@/config/site'
+import { cn } from '@/lib/utils'
+import Logo from '@/components/icons/logo.astro'
+const { pathname } = Astro.url
+---
+
+<div class="hidden md:flex">
+  <a href="/" class="flex items-center space-x-2 md:mr-4" aria-label="Home Logo Header Link">
+    <Logo fill="currentColor" class="h-6 w-6" />
+  </a>
+  <nav class="flex items-center space-x-6 text-sm font-medium">
+    {
+      siteConfig.navLinks.map((link) => (
+        <a
+          href={link.href}
+          aria-label="{link.title} Header Link"
+          class={cn(
+            'transition-colors hover:text-foreground/80',
+            (link.href === '/' ? pathname === '/' : pathname?.startsWith(link.href))
+              ? 'text-foreground'
+              : 'text-foreground/60',
+          )}
+        >
+          {link.title}
+        </a>
+      ))
+    }
+  </nav>
+</div>

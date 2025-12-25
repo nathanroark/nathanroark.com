@@ -1,0 +1,24 @@
+---
+import BaseHead from '@/components/base-head.astro'
+import Header from '@/components/header.astro'
+
+interface Props {
+  title?: string | undefined
+  description?: string | undefined
+  ogImage?: URL | undefined
+}
+
+const { title, description, ogImage } = Astro.props
+---
+
+<html lang="en" class="dark">
+  <head>
+    <BaseHead title={title} description={description} ogImage={ogImage} />
+  </head>
+  <body class="no-scrollbar min-h-screen">
+    <Header />
+    <main class="mx-auto w-full max-w-[1440px] px-2 pb-64 pt-4 md:px-6 md:pt-8">
+      <slot />
+    </main>
+  </body>
+</html>

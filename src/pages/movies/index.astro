@@ -1,0 +1,28 @@
+---
+import Layout from '@/layouts/layout.astro'
+import Card from '@/components/card.astro'
+
+import { getCollection } from 'astro:content'
+
+const posts = (await getCollection('movies')).sort((a, b) =>
+  new Date(a.data.release_date) > new Date(b.data.release_date) ? -1 : 1,
+)
+---
+
+<Layout title="Favorite Movies" description="My favorite movies.">
+  <div class="grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-5">
+    {
+      posts.map((post: any) => (
+        <Card
+          href={`/movies/${post.slug}`}
+          imgSrc={post.data.cover_art_url}
+          imgAlt={post.data.title}
+          title={post.data.title}
+          subtitle={post.data.director ? post.data.director : post.data.studio}
+          transitionName={`transition-${post.slug}`}
+          ariaLabel={`${post.data.title} directed by ${post.data.director ? post.data.director : post.data.studio}`}
+        />
+      ))
+    }
+  </div>
+</Layout>

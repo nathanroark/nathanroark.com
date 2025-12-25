@@ -1,0 +1,104 @@
+---
+interface Props {
+  href: string
+  imgSrc: string
+  imgAlt: string
+  album: string
+  artist: string
+  score?: number
+  transitionName?: string
+  anchorClass?: string
+  cardClass?: string
+}
+
+const {
+  href,
+  imgSrc,
+  imgAlt,
+  album,
+  artist,
+  score,
+  transitionName,
+  anchorClass = 'flex flex-col group',
+  // cardClass = 'flex h-full flex-col justify-between rounded border border-gray-700 p-2 dark:bg-gray-900 transition-all duration-300 hover:border-gray-500 dark:hover:border-gray-500',
+  cardClass = 'flex h-full flex-col justify-between rounded  transition-all duration-300 ',
+} = Astro.props as Props
+---
+
+<a href={href} class={anchorClass} aria-label={`${album} by ${artist}`}>
+  <div class={cardClass}>
+    <div class="relative w-full">
+      <div class="relative aspect-square overflow-hidden rounded bg-gray-900">
+        <!-- Blurred background - covers full area for all image orientations -->
+        <div
+          class="absolute inset-0"
+          style={{
+            backgroundImage: `url(${imgSrc})`,
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            backgroundRepeat: 'no-repeat',
+            transform: 'scale(1.06)',
+            filter: 'blur(7px) saturate(60%) brightness(1.2)',
+          }}
+          aria-hidden="true"
+        >
+        </div>
+
+        <!-- Optional overlay to enhance streak illusion -->
+        <div
+          class="absolute inset-0 bg-gradient-to-r from-black/20 via-transparent to-black/20 mix-blend-overlay"
+        >
+        </div>
+
+        <!-- Main art - use img with explicit sizing to prevent layout shift -->
+        <div class="relative z-10 flex h-full w-full items-center justify-center">
+          <div
+            transition:name={transitionName}
+            class="flex h-full w-full items-center justify-center"
+          >
+            <img
+              src={imgSrc}
+              alt={imgAlt}
+              class="max-h-full max-w-full object-contain"
+              loading="lazy"
+              decoding="async"
+              style="display: block;"
+            />
+          </div>
+        </div>
+
+        <!-- Subtle vignette -->
+        <div
+          class="pointer-events-none absolute inset-0 bg-gradient-to-br from-black/10 to-black/0"
+        >
+        </div>
+
+        <!-- Score overlay - appears on hover -->
+        {
+          score !== undefined && (
+            <div class="absolute inset-0 z-20 flex items-center justify-center bg-black/40 opacity-0 backdrop-blur-sm transition-all duration-300 ease-out group-hover:opacity-100">
+              {/* Score display */}
+              <div class="flex flex-col items-center gap-1">
+                {/* Main score number */}
+                <div class="text-5xl font-light tracking-tighter text-white md:text-6xl">
+                  {score}
+                </div>
+
+                {/* Subtle divider line */}
+                <div class="h-px w-12 bg-white/40" />
+
+                {/* "out of 10" text */}
+                <div class="text-sm font-light tracking-wide text-white/80 md:text-base">10</div>
+              </div>
+            </div>
+          )
+        }
+      </div>
+    </div>
+
+    <div>
+      <p class="truncate pt-2 text-sm">{album}</p>
+      <p class="truncate text-xs font-light text-white/60">{artist}</p>
+    </div>
+  </div>
+</a>

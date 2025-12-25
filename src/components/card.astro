@@ -1,0 +1,46 @@
+---
+import AstroImage from '@/components/astro-image.astro'
+
+interface Props {
+  href: string
+  /** Main image */
+  imgSrc: string
+  imgAlt: string
+  /** Top line (bold) */
+  title: string
+  /** Second line (muted) */
+  subtitle?: string
+  /** Optional unique transition name */
+  transitionName?: string
+  /** Extra classes for the outer anchor or card shell */
+  class?: string
+  cardClass?: string
+  /** Accessible label for the link */
+  ariaLabel?: string
+}
+
+const {
+  href,
+  imgSrc,
+  imgAlt,
+  title,
+  subtitle,
+  transitionName,
+  class: anchorClass = 'flex flex-col',
+  // cardClass = 'flex h-full flex-col justify-between rounded border border-gray-700 p-2 dark:bg-gray-900 transition-all duration-300 hover:border-gray-500 dark:hover:border-gray-500',
+  cardClass = 'flex h-full flex-col justify-between rounded transition-all duration-300',
+  ariaLabel,
+} = Astro.props as Props
+---
+
+<a href={href} class={anchorClass} aria-label={ariaLabel ?? title}>
+  <div class={cardClass}>
+    <div transition:name={transitionName} class="m-auto">
+      <AstroImage src={imgSrc} alt={imgAlt} width={200} height={200} />
+    </div>
+    <div>
+      <p class="truncate pt-2 text-sm">{title}</p>
+      {subtitle && <p class="truncate text-xs font-light text-white/60">{subtitle}</p>}
+    </div>
+  </div>
+</a>

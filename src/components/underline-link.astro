@@ -1,0 +1,39 @@
+---
+interface Props {
+  href: string
+  class?: string
+  underlineHeightClass?: string
+  duration?: number
+  gradient?: 'sunset' | 'aurora' | 'velvet' | 'ocean' | 'citrus' | 'mono'
+  customGradientClass?: string
+  ariaLabel?: string
+}
+
+const {
+  href,
+  class: cls = '',
+  underlineHeightClass = 'h-0.5',
+  duration = 300,
+  gradient = 'sunset',
+  customGradientClass,
+  ariaLabel,
+} = Astro.props
+
+const gradients: Record<string, string> = {
+  sunset: 'bg-gradient-to-r from-pink-500 via-orange-500 to-amber-400',
+  aurora: 'bg-gradient-to-r from-emerald-400 to-cyan-400',
+  ocean: 'bg-gradient-to-r from-blue-500 to-cyan-400',
+  citrus: 'bg-gradient-to-r from-yellow-400 to-orange-500',
+  mono: 'bg-current',
+}
+const gradientClass = customGradientClass ?? gradients[gradient]
+---
+
+<a href={href} aria-label={ariaLabel} class={`group relative inline-flex items-center ${cls}`}>
+  <span class="inline-flex items-center"><slot /></span>
+  <slot name="icon" />
+  <span
+    class={`pointer-events-none absolute left-0 -bottom-0.5 w-0 ${underlineHeightClass} ${gradientClass} transition-all group-hover:w-full`}
+    style={`transition-duration:${duration}ms`}
+    aria-hidden="true"></span>
+</a>

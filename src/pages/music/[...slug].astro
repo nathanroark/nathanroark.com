@@ -1,0 +1,70 @@
+---
+import { getCollection, getEntry } from 'astro:content'
+import StreamingLinks from '@/components/streaming-links.astro'
+import Layout from '@/layouts/content-layout.astro'
+import { Image } from 'astro:assets'
+import BackdropSection from '@/components/backdrop-section.astro'
+
+// Static paths: only return params (no props)
+export async function getStaticPaths() {
+  const posts = await getCollection('albums')
+  return posts.map((post) => ({
+    params: { slug: post.slug },
+  }))
+}
+
+// In the page: refetch the entry so we have methods like .render()
+const { slug } = Astro.params
+const post = await getEntry('albums', slug!)
+if (!post) throw new Error('Not found')
+
+const { Content } = await post.render()
+
+const ogUrl = new URL(`/og/${post.slug}.png`, Astro.site)
+const release = new Date(post.data.release_date)
+---
+
+<Layout
+  title={post.data.album}
+  description={`${post.data.album} - ${post.data.artist}`}
+  ogImage={ogUrl}
+>
+  <div class="relative">
+    <BackdropSection imgSrc={post.data.cover_art_url} />
+    <div
+      class="mx-auto flex flex-col items-start overflow-hidden border-b border-gray-800 px-4 py-8 md:max-w-5xl md:flex-row md:items-end md:space-x-8"
+    >
+      <Image
+        src={post.data.cover_art_url}
+        alt={post.slug}
+        width="300"
+        height="300"
+        class="relative z-10 mx-auto block aspect-square rounded-md bg-white"
+        style={`view-transition-name: transition-${post.slug};`}
+      />
+
+      <div
+        class="relative z-10 flex flex-1 flex-col justify-end pt-8 text-white [text-shadow:_0_2px_6px_rgb(0_0_0_/_0.6)]"
+      >
+        <h1 class="text-5xl font-bold tracking-tight">{post.data.album}</h1>
+        <p class="mt-3 text-3xl">{post.data.artist}</p>
+        <p class="mt-2 text-lg">{post.data.genres[0]} — {release.toLocaleDateString()}</p>
+      </div>
+    </div>
+  </div>
+
+  <div
+    class="md:prose-md prose mx-auto px-6 py-8 dark:prose-invert md:prose-lg xl:prose-xl lg:px-0"
+  >
+    {
+      post.data.links && (
+        <div class="mt-4">
+          <StreamingLinks links={post.data.links} />
+        </div>
+      )
+    }
+    <hr />
+
+    <Content />
+  </div>
+</Layout>

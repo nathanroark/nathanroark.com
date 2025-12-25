@@ -1,0 +1,69 @@
+---
+import { siteConfig } from '@/config/site'
+import Logo from '@/components/icons/logo.astro'
+---
+
+<div class="md:hidden">
+  <details class="group relative">
+    <summary class="inline-flex list-none items-center gap-2 rounded p-2" aria-label="Toggle menu">
+      <svg class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M4 6h16M4 12h16M4 18h16"></path>
+      </svg>
+      <span class="sr-only">Toggle menu</span>
+    </summary>
+
+    <!-- Backdrop -->
+    <div class="fixed inset-0 z-40 hidden bg-black/50 group-open:block" aria-hidden="true"></div>
+
+    <!-- Drawer -->
+    <nav
+      class="fixed left-0 top-0 z-50 h-screen w-72 max-w-[85vw]
+             translate-x-[-100%] bg-white text-gray-900 shadow-2xl ring-1 ring-black/10
+             transition-transform duration-200 group-open:translate-x-0
+             dark:bg-neutral-950 dark:text-neutral-50 dark:ring-white/10"
+      role="dialog"
+      aria-modal="true"
+    >
+      <div
+        class="flex items-center justify-between border-b border-black/10 px-4 py-3 dark:border-white/10"
+      >
+        <a href="/" class="flex items-start gap-2 text-lg font-bold">
+          <Logo class="inline align-middle" />
+          {siteConfig.title}</a
+        >
+        <button
+          type="button"
+          class="rounded p-2 hover:bg-black/5 dark:hover:bg-white/10"
+          onclick="this.closest('details')?.removeAttribute('open')"
+          aria-label="Close"
+        >
+          <svg
+            class="h-5 w-5"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <path d="M18 6 6 18M6 6l12 12"></path>
+          </svg>
+        </button>
+      </div>
+
+      <ul class="px-4 py-3">
+        {
+          siteConfig.navLinks.map((l) => (
+            <li>
+              <a
+                href={l.href}
+                class="block rounded px-2 py-2 text-base hover:bg-black/5 dark:hover:bg-white/10"
+                onclick="this.closest('details')?.removeAttribute('open')"
+              >
+                {l.title}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+  </details>
+</div>

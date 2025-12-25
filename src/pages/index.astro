@@ -1,16 +1,181 @@
 ---
+import Layout from '@/layouts/layout.astro'
+import UnderlineLink from '@/components/underline-link.astro'
+import Card from '@/components/card.astro'
+import AlbumCard from '@/components/album-card.astro'
+import { getCollection } from 'astro:content'
+import ArrowRight from '@/components/icons/arrow-right.astro'
 
+// Get all albums sorted by release date (newest first)
+const allAlbums = (await getCollection('albums')).sort((a, b) =>
+  new Date(a.data.release_date) > new Date(b.data.release_date) ? -1 : 1,
+)
+
+// Get current year
+const currentYear = new Date().getFullYear()
+
+// Get albums from this year
+const thisYearAlbums = allAlbums.filter(
+  (album) => new Date(album.data.release_date).getFullYear() === currentYear,
+)
+
+// Decide which set to use
+let musicPosts
+if (thisYearAlbums.length >= 10) {
+  // If we have 10 or more albums this year, use those
+  musicPosts = thisYearAlbums.sort((a, b) => (b.data.score ?? 0) - (a.data.score ?? 0)).slice(0, 10)
+} else {
+  // Otherwise, take the 10 most recent albums from all time
+  musicPosts = allAlbums.slice(0, 10).sort((a, b) => (b.data.score ?? 0) - (a.data.score ?? 0))
+}
+
+const bookPosts = (await getCollection('books'))
+  .sort((a, b) => (new Date(a.data.read) > new Date(b.data.read) ? -1 : 1))
+  .slice(0, 10)
+
+const animePosts = (await getCollection('anime'))
+  .sort((a, b) => {
+    const getDate = (x: any) => x.data.releaseDate ?? x.data.startDate
+    const ad = getDate(a),
+      bd = getDate(b)
+    if (!ad && !bd) return 0
+    if (!ad) return 1
+    if (!bd) return -1
+    return ad > bd ? -1 : 1
+  })
+  .slice(0, 10)
+
+const moviePosts = (await getCollection('movies'))
+  // .sort((a, b) => (new Date(a.data.release_date) > new Date(b.data.release_date) ? -1 : 1))
+  // .slice(0, 10)
+  .sort((a, b) => (b.data.score ?? 0) - (a.data.score ?? 0))
+  .slice(0, 10)
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
-</html>
+<Layout title="Nathan's Blog" description="A blog about music, movies, anime, and books I like.">
+  <div class="mx-auto flex w-full flex-col space-y-16 pt-4">
+    <div>
+      <h1 class="text-5xl font-bold">Nathan's Blog</h1>
+      <p class="text-xl">A blog for me to post about music, movies, anime, and books.</p>
+    </div>
+
+    {/* Music */}
+    <div class="space-y-3">
+      <UnderlineLink
+        href="music/"
+        class="text-4xl italic"
+        underlineHeightClass="h-[3px]"
+        duration={350}
+        aria-label="Music Posts"
+      >
+        Music Posts
+        <ArrowRight slot="icon" className="ml-1" size={40} />
+      </UnderlineLink>
+      <div class="grid grid-cols-2 gap-3 md:grid-cols-5 md:gap-4">
+        {
+          musicPosts.map((post: any) => (
+            <AlbumCard
+              href={`/music/${post.slug}`}
+              imgSrc={post.data.cover_art_url}
+              imgAlt={post.data.album}
+              album={post.data.album}
+              artist={post.data.artist}
+              transitionName={`transition-${post.slug}`}
+            />
+          ))
+        }
+      </div>
+    </div>
+
+    {/* Movies */}
+    <div class="space-y-3">
+      <UnderlineLink
+        href="movies/"
+        class="text-4xl italic"
+        underlineHeightClass="h-[3px]"
+        duration={350}
+        aria-label="Movie Posts"
+      >
+        Movie Posts
+        <ArrowRight slot="icon" className="ml-1" size={40} />
+      </UnderlineLink>
+
+      <div class="grid grid-cols-2 gap-3 md:grid-cols-5 md:gap-4">
+        {
+          moviePosts.map((post: any) => (
+            <Card
+              href={`/movies/${post.slug}`}
+              imgSrc={post.data.cover_art_url}
+              imgAlt={post.data.title}
+              title={post.data.title}
+              subtitle={post.data.director ? post.data.director : post.data.studio}
+              transitionName={`record-${post.slug}`}
+              ariaLabel={`${post.data.title} directed by ${post.data.director ? post.data.director : post.data.studio}`}
+            />
+          ))
+        }
+      </div>
+    </div>
+
+    {/* Anime */}
+    <div class="space-y-3">
+      <UnderlineLink
+        href="anime/"
+        class="text-4xl italic"
+        underlineHeightClass="h-[3px]"
+        duration={350}
+        aria-label="Anime Posts"
+      >
+        Anime Posts
+        <ArrowRight slot="icon" className="ml-1" size={40} />
+      </UnderlineLink>
+
+      <div class="grid grid-cols-2 gap-3 md:grid-cols-5 md:gap-4">
+        {
+          animePosts.map((post: any) => (
+            <Card
+              href={`/anime/${post.slug}`}
+              imgSrc={post.data.art}
+              imgAlt={post.data.title}
+              title={post.data.title}
+              subtitle={post.data.studio}
+              transitionName={`book-${post.slug}`}
+              ariaLabel={`${post.data.title} by ${post.data.studio}`}
+            />
+          ))
+        }
+      </div>
+    </div>
+
+    {/* Books */}
+    <div class="space-y-3">
+      <UnderlineLink
+        href="books/"
+        class="text-4xl italic"
+        gradient="sunset"
+        underlineHeightClass="h-[3px]"
+        duration={350}
+        aria-label="Book Posts"
+      >
+        Book Posts
+        <ArrowRight slot="icon" className="ml-1" size={40} />
+      </UnderlineLink>
+
+      <div class="grid grid-cols-2 gap-3 md:grid-cols-5 md:gap-4">
+        {
+          bookPosts.map((post: any) => (
+            <Card
+              href={`/books/${post.slug}`}
+              imgSrc={post.data.cover_image}
+              imgAlt={post.data.title}
+              title={post.data.title}
+              subtitle={post.data.author}
+              transitionName={`book-${post.slug}`}
+              ariaLabel={`${post.data.title} by ${post.data.author}`}
+            />
+          ))
+        }
+      </div>
+    </div>
+  </div>
+</Layout>

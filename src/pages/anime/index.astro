@@ -1,0 +1,36 @@
+---
+import Layout from '@/layouts/layout.astro'
+import Card from '@/components/card.astro'
+
+import { getCollection } from 'astro:content'
+
+const posts = (await getCollection('anime')).sort((a, b) => {
+  let aDate: Date
+  if (a.data.releaseDate) aDate = a.data.releaseDate
+  else if (a.data.startDate) aDate = a.data.startDate
+  else return 1
+  let bDate: Date
+  if (b.data.releaseDate) bDate = b.data.releaseDate
+  else if (b.data.startDate) bDate = b.data.startDate
+  else return -1
+  return aDate > bDate ? -1 : 1
+})
+---
+
+<Layout title="Favorite Anime" description="My favorite anime.">
+  <div class="grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-5">
+    {
+      posts.map((post: any) => (
+        <Card
+          href={`/anime/${post.slug}`}
+          imgSrc={post.data.art}
+          imgAlt={post.data.title}
+          title={post.data.title}
+          subtitle={post.data.studio}
+          transitionName={`transition-${post.slug}`}
+          ariaLabel={`${post.data.title} by ${post.data.studio}`}
+        />
+      ))
+    }
+  </div>
+</Layout>

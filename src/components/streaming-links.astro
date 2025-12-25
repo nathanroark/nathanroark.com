@@ -1,0 +1,82 @@
+---
+import AppleMusicIcon from '@/components/icons/streaming-services/apple-music.astro'
+import SpotifyIcon from '@/components/icons/streaming-services/spotify.astro'
+// TODO: fix youtube-music icon
+import YouTubeMusicIcon from '@/components/icons/streaming-services/youtube.astro'
+import BandcampIcon from '@/components/icons/streaming-services/bandcamp.astro'
+import SoundCloudIcon from '@/components/icons/streaming-services/soundcloud.astro'
+import TidalIcon from '@/components/icons/streaming-services/tidal.astro'
+
+interface Props {
+  links?: Record<string, string>
+}
+
+const { links } = Astro.props
+
+// Map of service names to their display info
+const serviceConfig: Record<string, { name: string; component: any }> = {
+  spotify: {
+    name: 'Spotify',
+    component: SpotifyIcon,
+  },
+  'apple-music': {
+    name: 'Apple Music',
+    component: AppleMusicIcon,
+  },
+  youtube: {
+    name: 'YouTube',
+    component: YouTubeMusicIcon,
+  },
+  bandcamp: {
+    name: 'Bandcamp',
+    component: BandcampIcon,
+  },
+  soundcloud: {
+    name: 'SoundCloud',
+    component: SoundCloudIcon,
+  },
+  tidal: {
+    name: 'Tidal',
+    component: TidalIcon,
+  },
+}
+
+// If no links are provided, don't render anything
+if (!links || Object.keys(links).length === 0) {
+  return null
+}
+---
+
+<div class="flex flex-wrap items-center justify-evenly gap-3">
+  <!-- <span class="font-medium text-gray-600 dark:text-gray-400">Listen on:</span> -->
+  {
+    Object.entries(links).map(([service, url]) => {
+      const config = serviceConfig[service.toLowerCase()]
+      if (!config) {
+        // Fallback for unknown services - just show a generic link
+        return (
+          <a
+            href={url}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="group inline-flex items-center gap-2 rounded-lg  border border-border px-3 py-2 text-sm font-medium no-underline"
+          >
+            <span class="capitalize">{service}</span>
+          </a>
+        )
+      }
+      return (
+        <a
+          href={url}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="group inline-flex items-center gap-2 rounded-lg  border border-border px-3 py-2 text-sm font-medium no-underline"
+          aria-label={`Listen on ${config.name}`}
+        >
+          <config.component width={24} height={24} />
+          <span>{config.name}</span>
+        </a>
+      )
+    })
+  }
+</div>

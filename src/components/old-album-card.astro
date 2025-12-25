@@ -1,0 +1,72 @@
+---
+import AstroImage from '@/components/astro-image.astro'
+
+interface Props {
+  href: string
+  imgSrc: string
+  imgAlt: string
+  album: string
+  artist: string
+  transitionName?: string
+  anchorClass?: string
+  cardClass?: string
+}
+
+const {
+  href,
+  imgSrc,
+  imgAlt,
+  album,
+  artist,
+  transitionName,
+  anchorClass = 'flex flex-col',
+  cardClass = 'flex h-full flex-col justify-between rounded border border-gray-700 p-2 dark:bg-gray-900',
+} = Astro.props as Props
+---
+
+<a href={href} class={anchorClass} aria-label={`${album} by ${artist}`}>
+  <div class={cardClass}>
+    <div class="relative w-full">
+      <div class="relative aspect-square overflow-hidden rounded">
+        <!-- streaky blur background -->
+        <div
+          class="absolute inset-0"
+          style={{
+            backgroundImage: `url(${imgSrc})`,
+            backgroundSize: 'cover', // fill both axes, no distortion
+            backgroundPosition: 'center',
+            backgroundRepeat: 'no-repeat',
+            transform: 'scale(1.06)', // hide blur edges
+            filter: 'blur(7px) saturate(120%) brightness(1.0)',
+          }}
+          aria-hidden="true"
+        >
+        </div>
+
+        <!-- optional overlay to enhance streak illusion -->
+        <div
+          class="absolute inset-0 bg-gradient-to-r from-black/20 via-transparent to-black/20 mix-blend-overlay"
+        >
+        </div>
+
+        <!-- main art -->
+        <div class="relative z-10 flex h-full w-full items-center justify-center">
+          <div transition:name={transitionName} class="max-h-full max-w-full">
+            <AstroImage src={imgSrc} alt={imgAlt} class="h-full w-full object-contain" />
+          </div>
+        </div>
+
+        <!-- subtle vignette -->
+        <div
+          class="pointer-events-none absolute inset-0 bg-gradient-to-br from-black/10 to-black/0"
+        >
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <p class="truncate pt-4 font-semibold">{album}</p>
+      <p class="truncate pt-1">{artist}</p>
+    </div>
+  </div>
+</a>

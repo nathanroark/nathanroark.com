@@ -1,0 +1,27 @@
+---
+import Layout from '@/layouts/layout.astro'
+import AlbumCard from '@/components/album-card.astro'
+
+import { getCollection } from 'astro:content'
+
+const musicPosts = (await getCollection('albums')).sort((a, b) =>
+  new Date(a.data.release_date) > new Date(b.data.release_date) ? -1 : 1,
+)
+---
+
+<Layout title="Favorite Albums" description="My favorite albums.">
+  <div class="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-5">
+    {
+      musicPosts.map((post: any) => (
+        <AlbumCard
+          href={`/music/${post.slug}`}
+          imgSrc={post.data.cover_art_url}
+          imgAlt={post.data.album}
+          album={post.data.album}
+          artist={post.data.artist}
+          transitionName={`transition-${post.slug}`}
+        />
+      ))
+    }
+  </div>
+</Layout>

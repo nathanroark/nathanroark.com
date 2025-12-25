@@ -1,0 +1,16 @@
+---
+import { Image } from 'astro:assets'
+
+const { src, alt } = Astro.props
+---
+
+<Image
+  class="rounded shadow"
+  src={src}
+  alt={alt}
+  width="400"
+  height="400"
+  sizes="(max-width: 600px) 200px, (max-width: 1024px) 400px, 800px"
+  format="avif"
+  quality={80}
+/>
