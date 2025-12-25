@@ -1,4 +1,21 @@
-import { defineCollection, z } from 'astro:content'
+//
+// https://docs.astro.build/en/guides/content-collections/
+//
+// 1. Import utilities from `astro:content`
+import { defineCollection } from 'astro:content';
+
+// 2. Import loader(s)
+import { glob, file } from 'astro/loaders';
+
+// 3. Import Zod
+import { z } from 'astro/zod';
+
+// 4. Define your collection(s)
+// const blog = defineCollection({ /* ... */ });
+// const dogs = defineCollection({ /* ... */ });
+
+// 5. Export a single `collections` object to register your collection(s)
+// export const collections = { blog, dogs };
 
 // ---------- Books ----------
 const BookSchema = z.object({
@@ -12,6 +29,7 @@ const BookSchema = z.object({
 export type BookEntry = z.output<typeof BookSchema>
 
 const books = defineCollection({
+  loader: glob({ pattern: "**/*.md", base: "./src/content/books" }),
   schema: BookSchema,
 })
 
@@ -28,6 +46,7 @@ const AlbumSchema = z.object({
 export type AlbumEntry = z.output<typeof AlbumSchema>
 
 const albums = defineCollection({
+  loader: glob({ pattern: "**/*.md", base: "./src/content/albums" }),
   schema: AlbumSchema,
 })
 
@@ -44,6 +63,7 @@ const AnimeSchema = z.object({
 export type AnimeEntry = z.output<typeof AnimeSchema>
 
 const anime = defineCollection({
+  loader: glob({ pattern: "**/*.md", base: "./src/content/anime" }),
   schema: AnimeSchema,
 })
 
@@ -61,6 +81,7 @@ const MovieSchema = z.object({
 export type MovieEntry = z.output<typeof MovieSchema>
 
 const movies = defineCollection({
+  loader: glob({ pattern: "**/*.md", base: "./src/content/movies" }),
   schema: MovieSchema,
 })
 
