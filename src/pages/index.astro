@@ -84,12 +84,12 @@ const moviePosts = (await getCollection("movies"))
         {
           musicPosts.map((post: any) => (
             <AlbumCard
-              href={`/music/${post.slug}`}
+              href={`/music/${post.id}`}
               imgSrc={post.data.cover_art_url}
               imgAlt={post.data.album}
               album={post.data.album}
               artist={post.data.artist}
-              transitionName={`transition-${post.slug}`}
+              transitionName={`transition-${post.id}`}
             />
           ))
         }
@@ -113,14 +113,14 @@ const moviePosts = (await getCollection("movies"))
         {
           moviePosts.map((post: any) => (
             <Card
-              href={`/movies/${post.slug}`}
+              href={`/movies/${post.id}`}
               imgSrc={post.data.cover_art_url}
               imgAlt={post.data.title}
               title={post.data.title}
               subtitle={
                 post.data.director ? post.data.director : post.data.studio
               }
-              transitionName={`record-${post.slug}`}
+              transitionName={`record-${post.id}`}
               ariaLabel={`${post.data.title} directed by ${post.data.director ? post.data.director : post.data.studio}`}
             />
           ))
@@ -145,12 +145,12 @@ const moviePosts = (await getCollection("movies"))
         {
           animePosts.map((post: any) => (
             <Card
-              href={`/anime/${post.slug}`}
+              href={`/anime/${post.id}`}
               imgSrc={post.data.art}
               imgAlt={post.data.title}
               title={post.data.title}
               subtitle={post.data.studio}
-              transitionName={`book-${post.slug}`}
+              transitionName={`book-${post.id}`}
               ariaLabel={`${post.data.title} by ${post.data.studio}`}
             />
           ))
@@ -176,12 +176,12 @@ const moviePosts = (await getCollection("movies"))
         {
           bookPosts.map((post: any) => (
             <Card
-              href={`/books/${post.slug}`}
+              href={`/books/${post.id}`}
               imgSrc={post.data.cover_image}
               imgAlt={post.data.title}
               title={post.data.title}
               subtitle={post.data.author}
-              transitionName={`book-${post.slug}`}
+              transitionName={`book-${post.id}`}
               ariaLabel={`${post.data.title} by ${post.data.author}`}
             />
           ))
