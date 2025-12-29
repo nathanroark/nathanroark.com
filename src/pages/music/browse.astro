@@ -1,0 +1,754 @@
+---
+import Layout from "@/layouts/layout.astro";
+import AlbumCard from "@/components/album-card.astro";
+import { getCollection } from "astro:content";
+
+const musicPosts = (await getCollection("music")).map((post) => ({
+  ...post,
+  score: post.data.score ?? -1,
+  releaseTs: new Date(post.data.release_date).getTime(),
+}));
+---
+
+<Layout title="Browse Music" description="Search, sort, and filter music by score">
+  <div class="browse-container">
+    <!-- Header Section -->
+    <header class="browse-header">
+      <div class="header-content">
+        <h1 class="page-title">
+          <span class="title-accent">Browse</span> Collection
+        </h1>
+        <p class="page-subtitle">Discover and explore the catalog</p>
+      </div>
+      <div class="header-stats">
+        <div class="stat-pill">
+          <span class="stat-number" data-count>{musicPosts.length}</span>
+          <span class="stat-label">albums</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- Search & Filter Bar -->
+    <div class="filter-bar">
+      <div class="search-wrapper">
+        <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="8"/>
+          <path d="m21 21-4.35-4.35"/>
+        </svg>
+        <input
+          type="search"
+          data-search
+          placeholder="Search albums or artists..."
+          class="search-input"
+          autocomplete="off"
+        />
+        <kbd class="search-hint">/</kbd>
+      </div>
+      
+      <div class="filter-controls">
+        <div class="filter-group">
+          <label class="filter-label">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="filter-icon">
+              <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/>
+            </svg>
+            <select data-min-score class="filter-select">
+              <option value="-1">All scores</option>
+              <option value="5">5+ stars</option>
+              <option value="6">6+ stars</option>
+              <option value="7">7+ stars</option>
+              <option value="8">8+ stars</option>
+              <option value="9">9+ stars</option>
+              <option value="9.5">9.5+ stars</option>
+            </select>
+          </label>
+        </div>
+
+        <div class="filter-group">
+          <label class="filter-label">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="filter-icon">
+              <path d="M11 5h10M11 9h7M11 13h4M3 17l3 3 3-3M6 18V4"/>
+            </svg>
+            <select data-sort class="filter-select">
+              <option value="score-desc">Highest rated</option>
+              <option value="score-asc">Lowest rated</option>
+              <option value="release-desc">Newest first</option>
+              <option value="release-asc">Oldest first</option>
+              <option value="alpha">A → Z</option>
+            </select>
+          </label>
+        </div>
+
+        <button class="reset-btn" data-reset title="Reset filters">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/>
+            <path d="M3 3v5h5"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Active Filters Display -->
+    <div class="active-filters" data-active-filters style="display: none;">
+      <span class="filters-label">Active:</span>
+      <div class="filter-tags" data-filter-tags></div>
+    </div>
+
+    <!-- Results Grid -->
+    <div class="results-wrapper">
+      <div class="album-grid" data-grid>
+        {
+          musicPosts.map((post) => (
+            <div
+              class="album-card-wrapper"
+              data-card
+              data-title={post.data.album}
+              data-artist={post.data.artist}
+              data-score={post.score}
+              data-release={post.releaseTs}
+            >
+              <AlbumCard
+                href={`/music/${post.id}`}
+                imgSrc={post.data.cover_art_url}
+                imgAlt={post.data.album}
+                album={post.data.album}
+                artist={post.data.artist}
+                score={post.score >= 0 ? post.score : undefined}
+                transitionName={`transition-${post.id}`}
+              />
+            </div>
+          ))
+        }
+      </div>
+
+      <!-- Empty State -->
+      <div class="empty-state" data-empty style="display: none;">
+        <div class="empty-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <circle cx="12" cy="12" r="10"/>
+            <path d="m15 9-6 6M9 9l6 6"/>
+          </svg>
+        </div>
+        <h3 class="empty-title">No matches found</h3>
+        <p class="empty-text">Try adjusting your search or filters</p>
+        <button class="empty-reset" data-empty-reset>Clear all filters</button>
+      </div>
+    </div>
+  </div>
+
+  <style>
+    /* Container */
+    .browse-container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 2rem 1.5rem 4rem;
+      overflow-x: hidden;
+    }
+
+    /* Force consistent album card sizing */
+    .album-card-wrapper {
+      width: 100%;
+      min-width: 0; /* Prevents flex/grid blowout */
+    }
+
+    .album-card-wrapper > :first-child {
+      width: 100%;
+      display: block;
+    }
+
+    /* Force all images inside cards to be consistent */
+    .album-card-wrapper img {
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      object-fit: cover;
+      display: block;
+    }
+
+    /* Header */
+    .browse-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      margin-bottom: 2.5rem;
+      padding-bottom: 1.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .page-title {
+      font-size: clamp(2rem, 5vw, 3rem);
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      line-height: 1.1;
+      color: var(--foreground);
+    }
+
+    .title-accent {
+      background: linear-gradient(135deg, var(--chart-1), var(--chart-2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .page-subtitle {
+      margin-top: 0.5rem;
+      font-size: 1rem;
+      color: var(--muted-foreground);
+      letter-spacing: 0.01em;
+    }
+
+    .header-stats {
+      flex-shrink: 0;
+    }
+
+    .stat-pill {
+      display: flex;
+      align-items: baseline;
+      gap: 0.5rem;
+      padding: 0.75rem 1.25rem;
+      background: var(--secondary);
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+    }
+
+    .stat-number {
+      font-size: 1.5rem;
+      font-weight: 700;
+      font-variant-numeric: tabular-nums;
+      color: var(--foreground);
+    }
+
+    .stat-label {
+      font-size: 0.875rem;
+      color: var(--muted-foreground);
+      text-transform: lowercase;
+    }
+
+    /* Filter Bar */
+    .filter-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .search-wrapper {
+      flex: 1;
+      min-width: 280px;
+      position: relative;
+    }
+
+    .search-icon {
+      position: absolute;
+      left: 1rem;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 1.25rem;
+      height: 1.25rem;
+      color: var(--muted-foreground);
+      pointer-events: none;
+    }
+
+    .search-input {
+      width: 100%;
+      padding: 0.875rem 3rem 0.875rem 3rem;
+      font-size: 1rem;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      color: var(--foreground);
+      transition: all 0.2s ease;
+    }
+
+    .search-input::placeholder {
+      color: var(--muted-foreground);
+    }
+
+    .search-input:focus {
+      outline: none;
+      border-color: var(--ring);
+      box-shadow: 0 0 0 3px var(--ring), 0 0 0 1px var(--ring);
+    }
+
+    .search-hint {
+      position: absolute;
+      right: 1rem;
+      top: 50%;
+      transform: translateY(-50%);
+      padding: 0.25rem 0.5rem;
+      font-size: 0.75rem;
+      font-family: inherit;
+      background: var(--muted);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      color: var(--muted-foreground);
+      pointer-events: none;
+      opacity: 0.7;
+    }
+
+    .filter-controls {
+      display: flex;
+      gap: 0.75rem;
+      align-items: center;
+    }
+
+    .filter-group {
+      position: relative;
+    }
+
+    .filter-label {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      cursor: pointer;
+    }
+
+    .filter-icon {
+      width: 1rem;
+      height: 1rem;
+      color: var(--muted-foreground);
+      flex-shrink: 0;
+    }
+
+    .filter-select {
+      appearance: none;
+      padding: 0.75rem 2.5rem 0.75rem 0.75rem;
+      font-size: 0.9375rem;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      color: var(--foreground);
+      cursor: pointer;
+      transition: all 0.2s ease;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23888' stroke-width='2'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 0.75rem center;
+    }
+
+    .filter-select:hover {
+      border-color: var(--ring);
+    }
+
+    .filter-select:focus {
+      outline: none;
+      border-color: var(--ring);
+      box-shadow: 0 0 0 3px var(--ring), 0 0 0 1px var(--ring);
+    }
+
+    .reset-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 2.75rem;
+      height: 2.75rem;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      color: var(--muted-foreground);
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .reset-btn svg {
+      width: 1.25rem;
+      height: 1.25rem;
+    }
+
+    .reset-btn:hover {
+      background: var(--accent);
+      color: var(--accent-foreground);
+      border-color: var(--ring);
+    }
+
+    /* Active Filters */
+    .active-filters {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 1.5rem;
+      padding: 0.75rem 1rem;
+      background: var(--secondary);
+      border-radius: var(--radius);
+      font-size: 0.875rem;
+    }
+
+    .filters-label {
+      color: var(--muted-foreground);
+      font-weight: 500;
+    }
+
+    .filter-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .filter-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.375rem;
+      padding: 0.375rem 0.75rem;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 9999px;
+      font-size: 0.8125rem;
+      color: var(--foreground);
+    }
+
+    .filter-tag-remove {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 1rem;
+      height: 1rem;
+      background: none;
+      border: none;
+      color: var(--muted-foreground);
+      cursor: pointer;
+      padding: 0;
+      margin-left: 0.125rem;
+      border-radius: 50%;
+      transition: all 0.15s ease;
+    }
+
+    .filter-tag-remove:hover {
+      background: var(--destructive);
+      color: white;
+    }
+
+    /* Album Grid */
+    .results-wrapper {
+      position: relative;
+      min-height: 300px;
+      overflow: hidden;
+    }
+
+    .album-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 1rem;
+      width: 100%;
+    }
+
+    @media (min-width: 640px) {
+      .album-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 1.25rem;
+      }
+    }
+
+    @media (min-width: 1024px) {
+      .album-grid {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 1.5rem;
+      }
+    }
+
+    @media (min-width: 1280px) {
+      .album-grid {
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+      }
+    }
+
+    .album-card-wrapper {
+      animation: fadeSlideIn 0.4s ease forwards;
+      opacity: 0;
+      width: 100%;
+      min-width: 0;
+    }
+
+    @keyframes fadeSlideIn {
+      from {
+        opacity: 0;
+        transform: translateY(12px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Stagger animation */
+    .album-card-wrapper:nth-child(1) { animation-delay: 0ms; }
+    .album-card-wrapper:nth-child(2) { animation-delay: 30ms; }
+    .album-card-wrapper:nth-child(3) { animation-delay: 60ms; }
+    .album-card-wrapper:nth-child(4) { animation-delay: 90ms; }
+    .album-card-wrapper:nth-child(5) { animation-delay: 120ms; }
+    .album-card-wrapper:nth-child(6) { animation-delay: 150ms; }
+    .album-card-wrapper:nth-child(7) { animation-delay: 180ms; }
+    .album-card-wrapper:nth-child(8) { animation-delay: 210ms; }
+    .album-card-wrapper:nth-child(9) { animation-delay: 240ms; }
+    .album-card-wrapper:nth-child(10) { animation-delay: 270ms; }
+
+    /* Empty State */
+    .empty-state {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 3rem;
+    }
+
+    .empty-icon {
+      width: 4rem;
+      height: 4rem;
+      margin-bottom: 1.5rem;
+      color: var(--muted-foreground);
+      opacity: 0.5;
+    }
+
+    .empty-icon svg {
+      width: 100%;
+      height: 100%;
+    }
+
+    .empty-title {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--foreground);
+      margin-bottom: 0.5rem;
+    }
+
+    .empty-text {
+      color: var(--muted-foreground);
+      margin-bottom: 1.5rem;
+    }
+
+    .empty-reset {
+      padding: 0.625rem 1.25rem;
+      font-size: 0.9375rem;
+      font-weight: 500;
+      background: var(--primary);
+      color: var(--primary-foreground);
+      border: none;
+      border-radius: var(--radius);
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .empty-reset:hover {
+      opacity: 0.9;
+      transform: translateY(-1px);
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+      .browse-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+      }
+
+      .filter-bar {
+        flex-direction: column;
+      }
+
+      .search-wrapper {
+        min-width: 100%;
+      }
+
+      .filter-controls {
+        width: 100%;
+        flex-wrap: wrap;
+      }
+
+      .filter-group {
+        flex: 1;
+        min-width: calc(50% - 0.5rem);
+      }
+
+      .filter-select {
+        width: 100%;
+      }
+
+      .search-hint {
+        display: none;
+      }
+    }
+  </style>
+
+  <script is:inline>
+    const searchInput = document.querySelector('[data-search]');
+    const minScoreSelect = document.querySelector('[data-min-score]');
+    const sortSelect = document.querySelector('[data-sort]');
+    const grid = document.querySelector('[data-grid]');
+    const countEl = document.querySelector('[data-count]');
+    const emptyState = document.querySelector('[data-empty]');
+    const resetBtn = document.querySelector('[data-reset]');
+    const emptyResetBtn = document.querySelector('[data-empty-reset]');
+    const activeFiltersEl = document.querySelector('[data-active-filters]');
+    const filterTagsEl = document.querySelector('[data-filter-tags]');
+
+    const cards = Array.from(document.querySelectorAll('[data-card]'));
+    const totalCount = cards.length;
+
+    const normalize = (value) => value.toLowerCase().trim();
+
+    // Debounce function for search
+    const debounce = (fn, delay) => {
+      let timeoutId;
+      return (...args) => {
+        clearTimeout(timeoutId);
+        timeoutId = setTimeout(() => fn(...args), delay);
+      };
+    };
+
+    const updateActiveFilters = () => {
+      const query = searchInput.value.trim();
+      const minScore = parseFloat(minScoreSelect.value);
+      const sort = sortSelect.value;
+
+      const tags = [];
+
+      if (query) {
+        tags.push({ type: 'search', label: `"${query}"`, clear: () => { searchInput.value = ''; apply(); } });
+      }
+
+      if (minScore > -1) {
+        tags.push({ type: 'score', label: `${minScore}+ stars`, clear: () => { minScoreSelect.value = '-1'; apply(); } });
+      }
+
+      if (sort !== 'score-desc') {
+        const sortLabels = {
+          'score-asc': 'Lowest rated',
+          'release-desc': 'Newest first',
+          'release-asc': 'Oldest first',
+          'alpha': 'A → Z'
+        };
+        tags.push({ type: 'sort', label: sortLabels[sort], clear: () => { sortSelect.value = 'score-desc'; apply(); } });
+      }
+
+      if (tags.length > 0) {
+        activeFiltersEl.style.display = 'flex';
+        filterTagsEl.innerHTML = tags.map(tag => `
+          <span class="filter-tag" data-filter-type="${tag.type}">
+            ${tag.label}
+            <button class="filter-tag-remove" data-clear="${tag.type}" aria-label="Remove filter">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <path d="M18 6 6 18M6 6l12 12"/>
+              </svg>
+            </button>
+          </span>
+        `).join('');
+
+        // Add click handlers
+        tags.forEach(tag => {
+          const btn = filterTagsEl.querySelector(`[data-clear="${tag.type}"]`);
+          if (btn) btn.addEventListener('click', tag.clear);
+        });
+      } else {
+        activeFiltersEl.style.display = 'none';
+      }
+    };
+
+    const apply = () => {
+      const query = normalize(searchInput.value);
+      const minScore = parseFloat(minScoreSelect.value);
+      const sort = sortSelect.value;
+
+      // Filter cards
+      const filtered = cards.filter((card) => {
+        const title = normalize(card.dataset.title || '');
+        const artist = normalize(card.dataset.artist || '');
+        const score = parseFloat(card.dataset.score || '-1');
+
+        const matchesQuery = query === '' || title.includes(query) || artist.includes(query);
+        const matchesScore = minScore <= -1 || score >= minScore;
+        return matchesQuery && matchesScore;
+      });
+
+      // Sort cards - with secondary sort by release date when scores are equal
+      const sorted = filtered.sort((a, b) => {
+        const scoreA = parseFloat(a.dataset.score || '-1');
+        const scoreB = parseFloat(b.dataset.score || '-1');
+        const relA = parseInt(a.dataset.release || '0', 10);
+        const relB = parseInt(b.dataset.release || '0', 10);
+        const titleA = normalize(a.dataset.title || '');
+        const titleB = normalize(b.dataset.title || '');
+
+        switch (sort) {
+          case 'score-desc':
+            // Primary: score descending, Secondary: release date descending (newer first)
+            if (scoreB !== scoreA) return scoreB - scoreA;
+            return relB - relA;
+          
+          case 'score-asc':
+            // Primary: score ascending, Secondary: release date ascending (older first)
+            if (scoreA !== scoreB) return scoreA - scoreB;
+            return relA - relB;
+          
+          case 'release-desc':
+            // Primary: release descending, Secondary: score descending
+            if (relB !== relA) return relB - relA;
+            return scoreB - scoreA;
+          
+          case 'release-asc':
+            // Primary: release ascending, Secondary: score descending
+            if (relA !== relB) return relA - relB;
+            return scoreB - scoreA;
+          
+          case 'alpha':
+            // Primary: alphabetical, Secondary: score descending
+            const cmp = titleA.localeCompare(titleB);
+            if (cmp !== 0) return cmp;
+            return scoreB - scoreA;
+          
+          default:
+            return scoreB - scoreA;
+        }
+      });
+
+      // Update DOM
+      grid.innerHTML = '';
+      sorted.forEach((card, index) => {
+        // Reset animation
+        card.style.animation = 'none';
+        card.offsetHeight; // Trigger reflow
+        card.style.animation = '';
+        card.style.animationDelay = `${Math.min(index * 30, 300)}ms`;
+        grid.appendChild(card);
+      });
+
+      // Update count
+      const count = sorted.length;
+      countEl.textContent = count.toString();
+
+      // Toggle empty state
+      const showEmpty = count === 0;
+      emptyState.style.display = showEmpty ? 'flex' : 'none';
+      grid.style.display = showEmpty ? 'none' : 'grid';
+
+      // Update active filters display
+      updateActiveFilters();
+    };
+
+    const resetFilters = () => {
+      searchInput.value = '';
+      minScoreSelect.value = '-1';
+      sortSelect.value = 'score-desc';
+      apply();
+    };
+
+    // Event listeners
+    searchInput.addEventListener('input', debounce(apply, 150));
+    minScoreSelect.addEventListener('change', apply);
+    sortSelect.addEventListener('change', apply);
+    resetBtn.addEventListener('click', resetFilters);
+    emptyResetBtn.addEventListener('click', resetFilters);
+
+    // Keyboard shortcut for search
+    document.addEventListener('keydown', (e) => {
+      if (e.key === '/' && document.activeElement !== searchInput) {
+        e.preventDefault();
+        searchInput.focus();
+      }
+      if (e.key === 'Escape' && document.activeElement === searchInput) {
+        searchInput.blur();
+      }
+    });
+
+    // Initial render
+    apply();
+  </script>
+</Layout>

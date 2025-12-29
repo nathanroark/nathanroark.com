@@ -3,6 +3,10 @@ import Layout from "@/layouts/layout.astro";
 import AlbumCard from "@/components/album-card.astro";
 import { getCollection } from "astro:content";
 
+// Get query params for server-side state
+const url = Astro.url;
+const showScores = url.searchParams.get("scores") !== "hide";
+
 // Get all albums sorted by release date (newest first)
 const musicPosts = (await getCollection("music")).sort((a, b) =>
   new Date(a.data.release_date) > new Date(b.data.release_date) ? -1 : 1,
@@ -10,22 +14,16 @@ const musicPosts = (await getCollection("music")).sort((a, b) =>
 
 // Group albums by year or decade
 const albumsByPeriod = musicPosts
-  // remove albums less that 5 score
-  // .filter((post) => (post.data.score ?? 0) > 5)
   .reduce(
     (acc, post) => {
       const year = new Date(post.data.release_date).getFullYear();
       let period: string;
-
       if (year >= 2020) {
-        // Show individual years from 2010 onwards
         period = String(year);
       } else {
-        // Group by decade for older albums
         const decade = Math.floor(year / 10) * 10;
         period = `${decade}s`;
       }
-
       if (!acc[period]) {
         acc[period] = [];
       }
@@ -44,47 +42,76 @@ Object.keys(albumsByPeriod).forEach((period) => {
   });
 });
 
-// Get periods in descending order (years first, then decades)
+// Get periods in descending order
 const periods = Object.keys(albumsByPeriod).sort((a, b) => {
-  // Extract numeric value for comparison
   const numA = a.endsWith("s") ? parseInt(a) : parseInt(a);
   const numB = b.endsWith("s") ? parseInt(b) : parseInt(b);
   return numB - numA;
 });
 
-// const showScores = Astro.url.searchParams.get('scores') === 'true'
-const showScores = true;
+const totalAlbums = musicPosts.length;
 ---
 
 <Layout title="Music" description="Music Reviews">
-  <div class="space-y-12">
-    <!-- Page Settings -->
-    <!--   <div> -->
-    <!--     <button -->
-    <!--       class="mt-2 rounded bg-gray-200 px-3 py-1 text-sm dark:bg-gray-800" -->
-    <!--       onclick={`(() => { -->
-    <!--   const params = new URLSearchParams(window.location.search) -->
-    <!--   ${showScores ? "params.delete('scores')" : "params.set('scores', 'true')"} -->
-    <!--   const newQuery = params.toString() -->
-    <!--   location.search = newQuery ? '?' + newQuery : '' -->
-    <!-- })()`} -->
-    <!--     > -->
-    <!--       {showScores ? 'Hide' : 'Show'} Scores -->
-    <!--     </button> -->
-    <!--   </div> -->
+  <div class="space-y-8">
+    <!-- Header with controls -->
+    <!-- <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between pb-8">
+      <div>
+        <h1 class="text-4xl font-bold tracking-tight md:text-5xl">Music</h1>
+        <!-- <p class="mt-1 text-muted-foreground">{totalAlbums} albums by year</p> -->
+      <!-- </div>  -->
+      
+      <!-- <div class="flex items-center gap-2">
+        <div class="inline-flex rounded-lg border border-border bg-card p-1">
+          <a
+            href="?scores=show"
+            class:list={[
+              "rounded-md px-3 py-1.5 text-sm font-medium transition-colors",
+              showScores
+                ? "bg-primary text-primary-foreground"
+                : "text-muted-foreground hover:text-foreground"
+            ]}
+          >
+            Scores
+          </a>
+          <a
+            href="?scores=hide"
+            class:list={[
+              "rounded-md px-3 py-1.5 text-sm font-medium transition-colors",
+              !showScores
+                ? "bg-primary text-primary-foreground"
+                : "text-muted-foreground hover:text-foreground"
+            ]}
+          >
+            No Scores
+          </a>
+        </div> -->
 
+        <!-- Browse link -->
+        <!-- <a
+          href="/music/browse"
+          class="inline-flex items-center gap-2 rounded-lg border border-border bg-card px-3 py-2 text-sm font-medium text-foreground transition-colors hover:bg-accent"
+        >
+          <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="11" cy="11" r="8"/>
+            <path d="m21 21-4.35-4.35"/>
+          </svg>
+          Browse
+        </a>
+      </div>
+    </div> -->
+
+    <!-- Album sections -->
     {
       periods.map((period) => (
         <section class="space-y-4">
-          {/* Period header with line */}
           <div class="flex items-center gap-4">
             <h2 class="text-3xl font-bold tracking-tight md:text-4xl">
               {period}
             </h2>
-            <div class="h-px flex-1 bg-linear-to-r from-gray-300 to-transparent dark:from-gray-700" />
+            <div class="h-px flex-1 bg-linear-to-r from-border to-transparent" />
           </div>
 
-          {/* Album grid */}
           <div class="grid grid-cols-2 gap-3 md:grid-cols-3 md:gap-4 lg:grid-cols-5">
             {albumsByPeriod[period].map((post: any) => (
               <AlbumCard
