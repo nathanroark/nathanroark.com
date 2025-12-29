@@ -14,7 +14,7 @@ const posts = (await getCollection('movies')).sort((a, b) =>
     {
       posts.map((post: any) => (
         <Card
-          href={`/movies/${post.slug}`}
+          href={`/movies/${post.id}`}
           imgSrc={post.data.cover_art_url}
           imgAlt={post.data.title}
           title={post.data.title}

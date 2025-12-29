@@ -27,12 +27,9 @@ if (!post) {
 
 if (!post) throw new Error("Not found");
 
-// Use the render function instead of calling .render() on the entry
 const { Content } = await render(post);
 
-// Get clean slug for URLs (without .md)
 const cleanSlug = post.id.replace(/\.md$/, "");
-// const ogUrl = new URL(`/og/${cleanSlug}.png`, Astro.site);
 const ogUrl = new URL(`/og/${cleanSlug}.png`, Astro.site);
 const release = new Date(post.data.release_date);
 ---
