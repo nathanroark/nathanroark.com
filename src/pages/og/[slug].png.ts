@@ -9,7 +9,7 @@ import sharp from 'sharp'
 
 export async function GET({ params, site }: APIContext) {
   const { slug } = params
-  const post = (await getCollection('albums')).find((p) => p.slug === slug)
+  const post = (await getCollection('music')).find((p) => p.id === slug)
   if (!post) return new Response('Not found', { status: 404 })
 
   const width = 630
@@ -40,7 +40,7 @@ export async function GET({ params, site }: APIContext) {
 
   const png = new Resvg(svg, { fitTo: { mode: 'width', value: width } }).render()
 
-  return new Response(png.asPng(), {
+  return new Response(new Uint8Array(png.asPng()), {
     headers: {
       'Content-Type': 'image/png',
       'Cache-Control': 'public, max-age=31536000, immutable',
