@@ -14,6 +14,7 @@ export async function getStaticPaths() {
 const { post, cleanSlug } = Astro.props;
 const { Content } = await render(post);
 
+// TODO: handle director and/or studio better
 const director_or_studio = post.data.director ?? post.data.studio;
 ---
 
