@@ -1,38 +1,28 @@
 ---
-import { getCollection, getEntry, render } from "astro:content";
+import { getCollection, render } from "astro:content";
 import Layout from "@/layouts/content-layout.astro";
 import { Image } from "astro:assets";
 
-// Static paths: only return params (no props)
 export async function getStaticPaths() {
   const posts = await getCollection("movies");
   return posts.map((post) => ({
-    // Remove .md extension from the slug
     params: { slug: post.id.replace(/\.md$/, "") },
+    props: { post, cleanSlug: post.id.replace(/\.md$/, "") },
   }));
 }
 
-// In the page: refetch the entry so we have methods like .render()
-const { slug } = Astro.params;
-const post = await getEntry("movies", slug!);
-if (!post) throw new Error("Not found");
-
+const { post, cleanSlug } = Astro.props;
 const { Content } = await render(post);
-const cleanSlug = post.id.replace(/\.md$/, "");
 
-const director_or_studio = post.data.director
-  ? post.data.director
-  : post.data.studio;
+const director_or_studio = post.data.director ?? post.data.studio;
 ---
 
 <Layout
   title={post.data.title}
-  description={post.data.title + "-" + director_or_studio}
+  description={`${post.data.title} - ${director_or_studio}`}
 >
-  <div
-    class="overflow-hidden border-b border-gray-800 px-6 lg:px-0"
-  >
-    <div class="mx-auto flex flex-col md:flex-row w-fit">
+  <div class="overflow-hidden border-b border-gray-800 px-6 lg:px-0">
+    <div class="mx-auto flex w-fit flex-col md:flex-row">
       <div class="relative mr-32 w-72 py-2 shadow-xl md:w-auto">
         <Image
           src={post.data.cover_art_url}
@@ -43,14 +33,14 @@ const director_or_studio = post.data.director
           style={`view-transition-name: transition-${cleanSlug};`}
         />
       </div>
-      <div class="flex justify-center flex-col pt-8">
+      <div class="flex flex-col justify-center pt-8">
         <h1 class="text-5xl font-bold tracking-tight">
           {post.data.title}
         </h1>
         <p class="mt-3 text-3xl">
           {
             post.data.director && post.data.studio
-              ? post.data.director + " - " + post.data.studio
+              ? `${post.data.director} - ${post.data.studio}`
               : director_or_studio
           }
         </p>
