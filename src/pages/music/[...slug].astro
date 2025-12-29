@@ -1,35 +1,22 @@
 ---
-import { getCollection, getEntry, render } from "astro:content";
+import { getCollection, render } from "astro:content";
 import StreamingLinks from "@/components/streaming-links.astro";
 import Layout from "@/layouts/content-layout.astro";
 import { Image } from "astro:assets";
 import BackdropSection from "@/components/backdrop-section.astro";
 
-// Static paths: only return params (no props)
+// Static Paths Function: runs at build time to generate all possible paths
 export async function getStaticPaths() {
   const posts = await getCollection("music");
   return posts.map((post) => ({
-    // Remove .md extension from the slug
     params: { slug: post.id.replace(/\.md$/, "") },
+    props: { post, cleanSlug: post.id.replace(/\.md$/, "") },
   }));
 }
 
-// In the page: refetch the entry so we have methods like .render()
-const { slug } = Astro.params;
-
-// Try to get the entry with .md extension added back
-let post = await getEntry("music", `${slug}.md`);
-
-// If that doesn't work, try without the extension (in case it's already included)
-if (!post) {
-  post = await getEntry("music", slug!);
-}
-
-if (!post) throw new Error("Not found");
-
+// Format the props passed to the page
+const { post, cleanSlug } = Astro.props;
 const { Content } = await render(post);
-
-const cleanSlug = post.id.replace(/\.md$/, "");
 const ogUrl = new URL(`/og/${cleanSlug}.png`, Astro.site);
 const release = new Date(post.data.release_date);
 ---
