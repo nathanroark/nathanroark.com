@@ -14,12 +14,12 @@ const posts = (await getCollection('books')).sort((a, b) =>
     {
       posts.map((post: any) => (
         <Card
-          href={`/books/${post.slug}`}
+          href={`/books/${post.id}`}
           imgSrc={post.data.cover_image}
           imgAlt={post.data.title}
           title={post.data.title}
           subtitle={post.data.author}
-          transitionName={`transition-${post.slug}`}
+          transitionName={`transition-${post.id}`}
           ariaLabel={`${post.data.title} by ${post.data.author}`}
         />
       ))

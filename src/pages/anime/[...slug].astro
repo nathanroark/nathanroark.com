@@ -1,57 +1,55 @@
 ---
-import { getCollection, getEntry } from 'astro:content'
-import Layout from '@/layouts/content-layout.astro'
-import { Image } from 'astro:assets'
+import { getCollection, render } from "astro:content";
+import Layout from "@/layouts/content-layout.astro";
+import { Image } from "astro:assets";
 
-// Static paths: only return params (no props)
 export async function getStaticPaths() {
-  const posts = await getCollection('anime')
+  const posts = await getCollection("anime");
   return posts.map((post) => ({
-    params: { slug: post.slug },
-  }))
+    params: { slug: post.id.replace(/\.md$/, "") },
+    props: { post, cleanSlug: post.id.replace(/\.md$/, "") },
+  }));
 }
 
-// In the page: refetch the entry so we have methods like .render()
-const { slug } = Astro.params
-const post = await getEntry('anime', slug!)
-if (!post) throw new Error('Not found')
-
-const { Content } = await post.render()
+const { post, cleanSlug } = Astro.props;
+const { Content } = await render(post);
 ---
-
-<Layout title={post.data.title} description={post.data.title}>
-  <div
-    class="mx-auto flex max-w-screen-lg flex-col items-start overflow-hidden border-b border-gray-800 px-6 md:flex-row md:items-end lg:px-0"
-  >
-    <div class="relative mr-32 w-72 py-2 shadow-xl md:w-auto">
-      <Image
-        src={post.data.art}
-        alt={post.slug}
-        width="300"
-        height="300"
-        class="relative block rounded-md bg-white"
-        style={`view-transition-name: transition-${post.slug};`}
-      />
-    </div>
-    <div class="flex flex-1 flex-col justify-end pt-8">
-      <h1 class="text-5xl font-bold tracking-tight">
-        {post.data.title}
-      </h1>
-      <p class="mt-2 text-lg">
-        {post.data.genre[0]}
-      </p>
-      {
-        post.data.releaseDate && (
-          <p class="mt-2 text-lg">{post.data.releaseDate.toLocaleDateString()}</p>
-        )
-      }
-      {
-        post.data.startDate && post.data.endDate && (
-          <p class="mt-2 text-lg">
-            {post.data.startDate.toLocaleDateString()} - {post.data.endDate.toLocaleDateString()}
-          </p>
-        )
-      }
+<Layout
+  title={post.data.title}
+  description={`${post.data.title} - ${post.data.studio}`}
+>
+  <div class="overflow-hidden border-b border-gray-800 px-6 lg:px-0">
+    <div class="mx-auto flex w-fit flex-col md:flex-row">
+      <div class="relative mr-32 w-72 py-2 shadow-xl md:w-auto">
+        <Image
+          src={post.data.art}
+          alt={cleanSlug}
+          width="300"
+          height="300"
+          class="relative block rounded-md bg-white"
+          style={`view-transition-name: transition-${cleanSlug};`}
+        />
+      </div>
+      <div class="flex flex-col justify-center pt-8">
+        <h1 class="text-5xl font-bold tracking-tight">
+          {post.data.title}
+        </h1>
+        <p class="mt-2 text-lg">
+          {post.data.genre[0]}
+        </p>
+        {
+          post.data.releaseDate && (
+            <p class="mt-2 text-lg">{post.data.releaseDate.toLocaleDateString()}</p>
+          )
+        }
+        {
+          post.data.startDate && post.data.endDate && (
+            <p class="mt-2 text-lg">
+              {post.data.startDate.toLocaleDateString()} - {post.data.endDate.toLocaleDateString()}
+            </p>
+          )
+        }
+      </div>
     </div>
   </div>
   <div
