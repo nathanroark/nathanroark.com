@@ -29,7 +29,7 @@ const BookSchema = z.object({
 export type BookEntry = z.output<typeof BookSchema>;
 
 const books = defineCollection({
-  loader: glob({ pattern: "**/*.md", base: "./src/content/books" }),
+  loader: glob({ pattern: "**/*.md", base: "./content/books" }),
   schema: BookSchema,
 });
 
@@ -46,7 +46,7 @@ const MusicSchema = z.object({
 export type MusicEntry = z.output<typeof MusicSchema>;
 
 const music = defineCollection({
-  loader: glob({ pattern: "**/*.md", base: "./src/content/music" }),
+  loader: glob({ pattern: "**/*.md", base: "./content/music" }),
   schema: MusicSchema,
 });
 
@@ -63,7 +63,7 @@ const AnimeSchema = z.object({
 export type AnimeEntry = z.output<typeof AnimeSchema>;
 
 const anime = defineCollection({
-  loader: glob({ pattern: "**/*.md", base: "./src/content/anime" }),
+  loader: glob({ pattern: "**/*.md", base: "./content/anime" }),
   schema: AnimeSchema,
 });
 
@@ -81,7 +81,7 @@ const MovieSchema = z.object({
 export type MovieEntry = z.output<typeof MovieSchema>;
 
 const movies = defineCollection({
-  loader: glob({ pattern: "**/*.md", base: "./src/content/movies" }),
+  loader: glob({ pattern: "**/*.md", base: "./content/movies" }),
   schema: MovieSchema,
 });
 
