@@ -8,11 +8,13 @@ import sharp from 'sharp'
 
 // Generate paths for ALL collections
 export async function getStaticPaths() {
-  const [musicPosts, bookPosts, animePosts, moviePosts] = await Promise.all([
+  const [musicPosts
+    // , bookPosts, animePosts, moviePosts
+  ] = await Promise.all([
     getCollection('music'),
-    getCollection('books'),
-    getCollection('anime'),
-    getCollection('movies'),
+    // getCollection('books'),
+    // getCollection('anime'),
+    // getCollection('movies'),
   ])
 
   return [
@@ -20,18 +22,18 @@ export async function getStaticPaths() {
       params: { slug: post.id },
       props: { collection: 'music', post }
     })),
-    ...bookPosts.map((post) => ({
-      params: { slug: post.id },
-      props: { collection: 'books', post }
-    })),
-    ...animePosts.map((post) => ({
-      params: { slug: post.id },
-      props: { collection: 'anime', post }
-    })),
-    ...moviePosts.map((post) => ({
-      params: { slug: post.id },
-      props: { collection: 'movies', post }
-    })),
+    // ...bookPosts.map((post) => ({
+    //   params: { slug: post.id },
+    //   props: { collection: 'books', post }
+    // })),
+    // ...animePosts.map((post) => ({
+    //   params: { slug: post.id },
+    //   props: { collection: 'anime', post }
+    // })),
+    // ...moviePosts.map((post) => ({
+    //   params: { slug: post.id },
+    //   props: { collection: 'movies', post }
+    // })),
   ]
 }
 
