@@ -6,9 +6,39 @@ import { Resvg } from '@resvg/resvg-js'
 import type { APIContext } from 'astro'
 import sharp from 'sharp'
 
-export async function GET({ params, site }: APIContext) {
+// Generate paths for ALL collections
+export async function getStaticPaths() {
+  const [musicPosts, bookPosts, animePosts, moviePosts] = await Promise.all([
+    getCollection('music'),
+    getCollection('books'),
+    getCollection('anime'),
+    getCollection('movies'),
+  ])
+
+  return [
+    ...musicPosts.map((post) => ({
+      params: { slug: post.id },
+      props: { collection: 'music', post }
+    })),
+    ...bookPosts.map((post) => ({
+      params: { slug: post.id },
+      props: { collection: 'books', post }
+    })),
+    ...animePosts.map((post) => ({
+      params: { slug: post.id },
+      props: { collection: 'anime', post }
+    })),
+    ...moviePosts.map((post) => ({
+      params: { slug: post.id },
+      props: { collection: 'movies', post }
+    })),
+  ]
+}
+
+export async function GET({ params, site, props }: APIContext) {
   const { slug } = params
-  const post = (await getCollection('music')).find((p) => p.id === slug)
+  const { collection, post } = props as { collection: string; post: any }
+
   if (!post) return new Response('Not found', { status: 404 })
 
   const width = 630
