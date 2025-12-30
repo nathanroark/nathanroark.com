@@ -9,6 +9,9 @@ export default defineConfig({
   site: process.env.CI ? "https://nathanroark.com" : "http://localhost:4321",
   vite: {
     plugins: [tailwindcss()],
+    ssr: {
+      external: ["@resvg/resvg-js", "sharp"],
+    },
   },
   adapter: cloudflare({
     imageService: "cloudflare",
