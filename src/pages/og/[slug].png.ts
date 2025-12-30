@@ -1,5 +1,5 @@
 // src/pages/og-image-only/[slug].png.ts
-export const prerender = false
+export const prerender = true
 
 import { getCollection } from 'astro:content'
 import { Resvg } from '@resvg/resvg-js'
