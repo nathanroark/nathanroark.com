@@ -29,12 +29,14 @@ const moviesByPeriod = posts.reduce(
   {} as Record<string, typeof posts>,
 )
 
-// Keep each period sorted newest -> oldest (works for future years too)
+// Keep each period sorted by score (desc), then newest -> oldest
 Object.keys(moviesByPeriod).forEach((period) => {
-  moviesByPeriod[period].sort(
-    (a, b) =>
-      new Date(b.data.release_date).getTime() - new Date(a.data.release_date).getTime(),
-  )
+  moviesByPeriod[period].sort((a, b) => {
+    const scoreA = a.data.score ?? -1
+    const scoreB = b.data.score ?? -1
+    if (scoreB !== scoreA) return scoreB - scoreA
+    return new Date(b.data.release_date).getTime() - new Date(a.data.release_date).getTime()
+  })
 })
 
 // Period labels in descending order
@@ -45,7 +47,7 @@ const periods = Object.keys(moviesByPeriod).sort((a, b) => {
 })
 ---
 
-<Layout title="Favorite Movies" description="My favorite movies.">
+<Layout title="Movies" description="Movie Reviews">
   <div class="space-y-8">
     {
       periods.map((period) => (
