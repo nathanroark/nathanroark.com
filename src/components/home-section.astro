@@ -1,0 +1,81 @@
+---
+import UnderlineLink from "@/components/underline-link.astro";
+import Card from "@/components/card.astro";
+import AlbumCard from "@/components/album-card.astro";
+import ArrowRight from "@/components/icons/arrow-right.astro";
+
+interface Props {
+  title: string;
+  href: string;
+  posts: any[];
+  type: "music" | "movies" | "anime" | "books";
+}
+
+const { title, href, posts, type } = Astro.props;
+---
+
+<div class="space-y-3">
+  <UnderlineLink
+    href={href}
+    class="text-4xl italic"
+    underlineHeightClass="h-[3px]"
+    duration={350}
+    aria-label={`${title} Posts`}
+  >
+    {title} Posts
+    <ArrowRight slot="icon" className="ml-1" size={40} />
+  </UnderlineLink>
+
+  <div class="grid grid-cols-2 gap-3 md:grid-cols-5 lg:grid-cols-7">
+    {
+      type === "music" ? (
+        posts.map((post: any) => (
+          <AlbumCard
+            href={`/music/${post.id}`}
+            imgSrc={post.data.cover_art_url}
+            imgAlt={post.data.album}
+            album={post.data.album}
+            artist={post.data.artist}
+            transitionName={`transition-${post.id}`}
+          />
+        ))
+      ) : type === "movies" ? (
+        posts.map((post: any) => (
+          <Card
+            href={`/movies/${post.id}`}
+            imgSrc={post.data.cover_art_url}
+            imgAlt={post.data.title}
+            title={post.data.title}
+            subtitle={post.data.director ? post.data.director : post.data.studio}
+            transitionName={`record-${post.id}`}
+            ariaLabel={`${post.data.title} directed by ${post.data.director ? post.data.director : post.data.studio}`}
+          />
+        ))
+      ) : type === "anime" ? (
+        posts.map((post: any) => (
+          <Card
+            href={`/anime/${post.id}`}
+            imgSrc={post.data.art}
+            imgAlt={post.data.title}
+            title={post.data.title}
+            subtitle={post.data.studio}
+            transitionName={`book-${post.id}`}
+            ariaLabel={`${post.data.title} by ${post.data.studio}`}
+          />
+        ))
+      ) : (
+        posts.map((post: any) => (
+          <Card
+            href={`/books/${post.id}`}
+            imgSrc={post.data.cover_image}
+            imgAlt={post.data.title}
+            title={post.data.title}
+            subtitle={post.data.author}
+            transitionName={`book-${post.id}`}
+            ariaLabel={`${post.data.title} by ${post.data.author}`}
+          />
+        ))
+      )
+    }
+  </div>
+</div>

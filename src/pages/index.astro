@@ -1,64 +1,54 @@
 ---
 import Layout from "@/layouts/layout.astro";
-import UnderlineLink from "@/components/underline-link.astro";
-import Card from "@/components/card.astro";
-import AlbumCard from "@/components/album-card.astro";
+import HomeSection from "@/components/home-section.astro";
 import { getCollection } from "astro:content";
-import ArrowRight from "@/components/icons/arrow-right.astro";
 
-// Get all albums sorted by release date (newest first)
-const allAlbums = (await getCollection("music")).sort((a, b) =>
-  new Date(a.data.release_date) > new Date(b.data.release_date) ? -1 : 1,
-);
-
-// Get current year
+const ITEMS_PER_SECTION = 14;
 const currentYear = new Date().getFullYear();
 
-// Get albums from this year
-const thisYearAlbums = allAlbums.filter(
-  (album) => new Date(album.data.release_date).getFullYear() === currentYear,
-);
+// Helper functions
+const sortByDate = (a: any, b: any, dateField: string) => 
+  new Date(a.data[dateField]) > new Date(b.data[dateField]) ? -1 : 1;
 
-// Decide which set to use
-let musicPosts;
-if (thisYearAlbums.length >= 14) {
-  // If we have 14 or more albums this year, use those
-  musicPosts = thisYearAlbums
-    .sort((a, b) => (b.data.score ?? 0) - (a.data.score ?? 0))
-    .slice(0, 14);
-} else {
-  // Otherwise, fill the rest with the best albums of last year
-  let amountNeeded = 14 - thisYearAlbums.length;
-  const lastYearAlbums = allAlbums.filter(
-    (album) => new Date(album.data.release_date).getFullYear() === currentYear - 1,
-  ).sort((a, b) => (b.data.score ?? 0) - (a.data.score ?? 0));
-  musicPosts = [
-    ...thisYearAlbums,
-    ...lastYearAlbums.slice(0, amountNeeded),
-  ];
-}
+const sortByScore = (a: any, b: any) => (b.data.score ?? 0) - (a.data.score ?? 0);
 
-const bookPosts = (await getCollection("books"))
-  .sort((a, b) => (new Date(a.data.read) > new Date(b.data.read) ? -1 : 1))
-  .slice(0, 14);
+const getAlbumsByYear = (albums: any[], year: number) =>
+  albums.filter((album) => new Date(album.data.release_date).getFullYear() === year);
 
+// Music: Show current year albums by score, fill with best of last year if needed
+const allAlbums = (await getCollection("music")).sort((a, b) => sortByDate(a, b, "release_date"));
+const thisYearAlbums = getAlbumsByYear(allAlbums, currentYear).sort(sortByScore);
+
+const musicPosts = thisYearAlbums.length >= ITEMS_PER_SECTION
+  ? thisYearAlbums.slice(0, ITEMS_PER_SECTION)
+  : [
+      ...thisYearAlbums,
+      ...getAlbumsByYear(allAlbums, currentYear - 1)
+        .sort(sortByScore)
+        .slice(0, ITEMS_PER_SECTION - thisYearAlbums.length),
+    ];
+
+// Movies: Top rated
+const moviePosts = (await getCollection("movies"))
+  .sort(sortByScore)
+  .slice(0, ITEMS_PER_SECTION);
+
+// Anime: Most recent
 const animePosts = (await getCollection("anime"))
   .sort((a, b) => {
     const getDate = (x: any) => x.data.releaseDate ?? x.data.startDate;
-    const ad = getDate(a),
-      bd = getDate(b);
+    const ad = getDate(a), bd = getDate(b);
     if (!ad && !bd) return 0;
     if (!ad) return 1;
     if (!bd) return -1;
     return ad > bd ? -1 : 1;
   })
-  .slice(0, 14);
+  .slice(0, ITEMS_PER_SECTION);
 
-const moviePosts = (await getCollection("movies"))
-  // .sort((a, b) => (new Date(a.data.release_date) > new Date(b.data.release_date) ? -1 : 1))
-  // .slice(0, 14)
-  .sort((a, b) => (b.data.score ?? 0) - (a.data.score ?? 0))
-  .slice(0, 14);
+// Books: Most recently read
+const bookPosts = (await getCollection("books"))
+  .sort((a, b) => sortByDate(a, b, "read"))
+  .slice(0, ITEMS_PER_SECTION);
 ---
 
 <Layout
@@ -69,129 +59,13 @@ const moviePosts = (await getCollection("movies"))
     <div>
       <h1 class="text-5xl font-bold">Nathan's Blog</h1>
       <p class="text-xl">
-        A blog for me to post about music, movies, anime, and books.
+        A blog for me to post about music, movies, anime, and books
       </p>
     </div>
 
-    {/* Music */}
-    <div class="space-y-3">
-      <UnderlineLink
-        href="music/"
-        class="text-4xl italic"
-        underlineHeightClass="h-[3px]"
-        duration={350}
-        aria-label="Music Posts"
-      >
-        Music Posts
-        <ArrowRight slot="icon" className="ml-1" size={40} />
-      </UnderlineLink>
-      <div class="grid grid-cols-2 gap-3 md:grid-cols-5 lg:grid-cols-7">
-        {
-          musicPosts.map((post: any) => (
-            <AlbumCard
-              href={`/music/${post.id}`}
-              imgSrc={post.data.cover_art_url}
-              imgAlt={post.data.album}
-              album={post.data.album}
-              artist={post.data.artist}
-              transitionName={`transition-${post.id}`}
-            />
-          ))
-        }
-      </div>
-    </div>
-
-    {/* Movies */}
-    <div class="space-y-3">
-      <UnderlineLink
-        href="movies/"
-        class="text-4xl italic"
-        underlineHeightClass="h-[3px]"
-        duration={350}
-        aria-label="Movie Posts"
-      >
-        Movie Posts
-        <ArrowRight slot="icon" className="ml-1" size={40} />
-      </UnderlineLink>
-
-      <div class="grid grid-cols-2 gap-3 md:grid-cols-5 lg:grid-cols-7">
-        {
-          moviePosts.map((post: any) => (
-            <Card
-              href={`/movies/${post.id}`}
-              imgSrc={post.data.cover_art_url}
-              imgAlt={post.data.title}
-              title={post.data.title}
-              subtitle={
-                post.data.director ? post.data.director : post.data.studio
-              }
-              transitionName={`record-${post.id}`}
-              ariaLabel={`${post.data.title} directed by ${post.data.director ? post.data.director : post.data.studio}`}
-            />
-          ))
-        }
-      </div>
-    </div>
-
-    {/* Anime */}
-    <div class="space-y-3">
-      <UnderlineLink
-        href="anime/"
-        class="text-4xl italic"
-        underlineHeightClass="h-[3px]"
-        duration={350}
-        aria-label="Anime Posts"
-      >
-        Anime Posts
-        <ArrowRight slot="icon" className="ml-1" size={40} />
-      </UnderlineLink>
-
-      <div class="grid grid-cols-2 gap-3 md:grid-cols-5 lg:grid-cols-7">
-        {
-          animePosts.map((post: any) => (
-            <Card
-              href={`/anime/${post.id}`}
-              imgSrc={post.data.art}
-              imgAlt={post.data.title}
-              title={post.data.title}
-              subtitle={post.data.studio}
-              transitionName={`book-${post.id}`}
-              ariaLabel={`${post.data.title} by ${post.data.studio}`}
-            />
-          ))
-        }
-      </div>
-    </div>
-
-    {/* Books */}
-    <div class="space-y-3">
-      <UnderlineLink
-        href="books/"
-        class="text-4xl italic"
-        gradient="sunset"
-        underlineHeightClass="h-[3px]"
-        duration={350}
-        aria-label="Book Posts"
-      >
-        Book Posts
-        <ArrowRight slot="icon" className="ml-1" size={40} />
-      </UnderlineLink>
-
-      <div class="grid grid-cols-2 gap-3 md:grid-cols-5 lg:grid-cols-7">
-        {
-          bookPosts.map((post: any) => (
-            <Card
-              href={`/books/${post.id}`}
-              imgSrc={post.data.cover_image}
-              imgAlt={post.data.title}
-              title={post.data.title}
-              subtitle={post.data.author}
-              transitionName={`book-${post.id}`}
-              ariaLabel={`${post.data.title} by ${post.data.author}`}
-            />
-          ))
-        }
-      </div>
-    </div>
+    <HomeSection title="Music" href="music/" posts={musicPosts} type="music" />
+    <HomeSection title="Movie" href="movies/" posts={moviePosts} type="movies" />
+    <HomeSection title="Anime" href="anime/" posts={animePosts} type="anime" />
+    <HomeSection title="Book" href="books/" posts={bookPosts} type="books" />
   </div>
 </Layout>
