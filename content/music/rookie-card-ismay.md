@@ -1,5 +1,5 @@
 ---
-artist: 'Rookie Car'
+artist: 'Rookie Card'
 album: 'Ismay'
 release_date: '2021-05-05'
 genres: ['Screamo', 'Midwest Emo']
