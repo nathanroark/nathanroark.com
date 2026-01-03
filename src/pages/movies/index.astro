@@ -4,24 +4,73 @@ import Card from '@/components/card.astro'
 
 import { getCollection } from 'astro:content'
 
+// All movies sorted newest -> oldest
 const posts = (await getCollection('movies')).sort((a, b) =>
   new Date(a.data.release_date) > new Date(b.data.release_date) ? -1 : 1,
 )
+
+// Group movies by year (2020 and later) or decade (before 2020)
+const moviesByPeriod = posts.reduce(
+  (acc, post) => {
+    const year = new Date(post.data.release_date).getFullYear()
+    let period: string
+
+    if (year >= 2020) {
+      period = String(year)
+    } else {
+      const decade = Math.floor(year / 10) * 10
+      period = `${decade}s`
+    }
+
+    if (!acc[period]) acc[period] = []
+    acc[period].push(post)
+    return acc
+  },
+  {} as Record<string, typeof posts>,
+)
+
+// Keep each period sorted newest -> oldest (works for future years too)
+Object.keys(moviesByPeriod).forEach((period) => {
+  moviesByPeriod[period].sort(
+    (a, b) =>
+      new Date(b.data.release_date).getTime() - new Date(a.data.release_date).getTime(),
+  )
+})
+
+// Period labels in descending order
+const periods = Object.keys(moviesByPeriod).sort((a, b) => {
+  const numA = parseInt(a)
+  const numB = parseInt(b)
+  return numB - numA
+})
 ---
 
 <Layout title="Favorite Movies" description="My favorite movies.">
-  <div class="grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-5">
+  <div class="space-y-8">
     {
-      posts.map((post: any) => (
-        <Card
-          href={`/movies/${post.id}`}
-          imgSrc={post.data.cover_art_url}
-          imgAlt={post.data.title}
-          title={post.data.title}
-          subtitle={post.data.director ? post.data.director : post.data.studio}
-          transitionName={`transition-${post.slug}`}
-          ariaLabel={`${post.data.title} directed by ${post.data.director ? post.data.director : post.data.studio}`}
-        />
+      periods.map((period) => (
+        <section class="space-y-4">
+          <div class="flex items-center gap-4">
+            <h2 class="text-3xl font-bold tracking-tight md:text-4xl">
+              {period}
+            </h2>
+            <div class="h-px flex-1 bg-linear-to-r from-border to-transparent" />
+          </div>
+
+          <div class="grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-5">
+            {moviesByPeriod[period].map((post: any) => (
+              <Card
+                href={`/movies/${post.id}`}
+                imgSrc={post.data.cover_art_url}
+                imgAlt={post.data.title}
+                title={post.data.title}
+                subtitle={post.data.director ? post.data.director : post.data.studio}
+                transitionName={`transition-${post.slug}`}
+                ariaLabel={`${post.data.title} directed by ${post.data.director ? post.data.director : post.data.studio}`}
+              />
+            ))}
+          </div>
+        </section>
       ))
     }
   </div>
