@@ -21,21 +21,26 @@ const thisYearAlbums = allAlbums.filter(
 
 // Decide which set to use
 let musicPosts;
-if (thisYearAlbums.length >= 10) {
-  // If we have 10 or more albums this year, use those
+if (thisYearAlbums.length >= 14) {
+  // If we have 14 or more albums this year, use those
   musicPosts = thisYearAlbums
     .sort((a, b) => (b.data.score ?? 0) - (a.data.score ?? 0))
-    .slice(0, 10);
+    .slice(0, 14);
 } else {
-  // Otherwise, take the 10 most recent albums from all time
-  musicPosts = allAlbums
-    .slice(0, 10)
-    .sort((a, b) => (b.data.score ?? 0) - (a.data.score ?? 0));
+  // Otherwise, fill the rest with the best albums of last year
+  let amountNeeded = 14 - thisYearAlbums.length;
+  const lastYearAlbums = allAlbums.filter(
+    (album) => new Date(album.data.release_date).getFullYear() === currentYear - 1,
+  ).sort((a, b) => (b.data.score ?? 0) - (a.data.score ?? 0));
+  musicPosts = [
+    ...thisYearAlbums,
+    ...lastYearAlbums.slice(0, amountNeeded),
+  ];
 }
 
 const bookPosts = (await getCollection("books"))
   .sort((a, b) => (new Date(a.data.read) > new Date(b.data.read) ? -1 : 1))
-  .slice(0, 10);
+  .slice(0, 14);
 
 const animePosts = (await getCollection("anime"))
   .sort((a, b) => {
@@ -47,18 +52,18 @@ const animePosts = (await getCollection("anime"))
     if (!bd) return -1;
     return ad > bd ? -1 : 1;
   })
-  .slice(0, 10);
+  .slice(0, 14);
 
 const moviePosts = (await getCollection("movies"))
   // .sort((a, b) => (new Date(a.data.release_date) > new Date(b.data.release_date) ? -1 : 1))
-  // .slice(0, 10)
+  // .slice(0, 14)
   .sort((a, b) => (b.data.score ?? 0) - (a.data.score ?? 0))
-  .slice(0, 10);
+  .slice(0, 14);
 ---
 
 <Layout
   title="Nathan's Blog"
-  description="A blog about music, movies, anime, and books I like."
+  description="A blog about music, movies, anime, and books"
 >
   <div class="mx-auto flex w-full flex-col space-y-16 pt-4">
     <div>
@@ -80,7 +85,7 @@ const moviePosts = (await getCollection("movies"))
         Music Posts
         <ArrowRight slot="icon" className="ml-1" size={40} />
       </UnderlineLink>
-      <div class="grid grid-cols-2 gap-3 md:grid-cols-5 md:gap-4">
+      <div class="grid grid-cols-2 gap-3 md:grid-cols-5 lg:grid-cols-7">
         {
           musicPosts.map((post: any) => (
             <AlbumCard
@@ -109,7 +114,7 @@ const moviePosts = (await getCollection("movies"))
         <ArrowRight slot="icon" className="ml-1" size={40} />
       </UnderlineLink>
 
-      <div class="grid grid-cols-2 gap-3 md:grid-cols-5 md:gap-4">
+      <div class="grid grid-cols-2 gap-3 md:grid-cols-5 lg:grid-cols-7">
         {
           moviePosts.map((post: any) => (
             <Card
@@ -141,7 +146,7 @@ const moviePosts = (await getCollection("movies"))
         <ArrowRight slot="icon" className="ml-1" size={40} />
       </UnderlineLink>
 
-      <div class="grid grid-cols-2 gap-3 md:grid-cols-5 md:gap-4">
+      <div class="grid grid-cols-2 gap-3 md:grid-cols-5 lg:grid-cols-7">
         {
           animePosts.map((post: any) => (
             <Card
@@ -172,7 +177,7 @@ const moviePosts = (await getCollection("movies"))
         <ArrowRight slot="icon" className="ml-1" size={40} />
       </UnderlineLink>
 
-      <div class="grid grid-cols-2 gap-3 md:grid-cols-5 md:gap-4">
+      <div class="grid grid-cols-2 gap-3 md:grid-cols-5 lg:grid-cols-7">
         {
           bookPosts.map((post: any) => (
             <Card
