@@ -112,7 +112,7 @@ const totalAlbums = musicPosts.length;
             <div class="h-px flex-1 bg-linear-to-r from-border to-transparent" />
           </div>
 
-          <div class="grid grid-cols-2 gap-3 md:grid-cols-3 md:gap-4 lg:grid-cols-5">
+          <div class="grid grid-cols-3 gap-3 md:grid-cols-5 lg:grid-cols-7">
             {albumsByPeriod[period].map((post: any) => (
               <AlbumCard
                 href={`/music/${post.id}`}

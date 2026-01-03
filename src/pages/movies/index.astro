@@ -59,14 +59,15 @@ const periods = Object.keys(moviesByPeriod).sort((a, b) => {
             <div class="h-px flex-1 bg-linear-to-r from-border to-transparent" />
           </div>
 
-          <div class="grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-5">
+          <div class="grid grid-cols-3 gap-3 md:grid-cols-5 lg:grid-cols-7">
             {moviesByPeriod[period].map((post: any) => (
               <Card
                 href={`/movies/${post.id}`}
                 imgSrc={post.data.cover_art_url}
                 imgAlt={post.data.title}
                 title={post.data.title}
-                subtitle={post.data.director ? post.data.director : post.data.studio}
+                // subtitle={post.data.director ? post.data.director : post.data.studio}
+                subtitle={new Date(post.data.release_date).getFullYear().toString()}
                 transitionName={`transition-${post.slug}`}
                 ariaLabel={`${post.data.title} directed by ${post.data.director ? post.data.director : post.data.studio}`}
               />
