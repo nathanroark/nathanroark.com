@@ -1,50 +1,53 @@
 ---
-import Layout from '@/layouts/layout.astro'
-import Card from '@/components/card.astro'
+import Layout from "@/layouts/layout.astro";
+import Card from "@/components/card.astro";
 
-import { getCollection } from 'astro:content'
+import { getCollection } from "astro:content";
 
 // All movies sorted newest -> oldest
-const posts = (await getCollection('movies')).sort((a, b) =>
+const posts = (await getCollection("movies")).sort((a, b) =>
   new Date(a.data.release_date) > new Date(b.data.release_date) ? -1 : 1,
-)
+);
 
 // Group movies by year (2020 and later) or decade (before 2020)
 const moviesByPeriod = posts.reduce(
   (acc, post) => {
-    const year = new Date(post.data.release_date).getFullYear()
-    let period: string
+    const year = new Date(post.data.release_date).getFullYear();
+    let period: string;
 
-    if (year >= 2020) {
-      period = String(year)
-    } else {
-      const decade = Math.floor(year / 10) * 10
-      period = `${decade}s`
-    }
+    // if (year >= 2020) {
+    //   period = String(year)
+    // } else {
+    const decade = Math.floor(year / 10) * 10;
+    period = `${decade}s`;
+    // }
 
-    if (!acc[period]) acc[period] = []
-    acc[period].push(post)
-    return acc
+    if (!acc[period]) acc[period] = [];
+    acc[period].push(post);
+    return acc;
   },
   {} as Record<string, typeof posts>,
-)
+);
 
 // Keep each period sorted by score (desc), then newest -> oldest
 Object.keys(moviesByPeriod).forEach((period) => {
   moviesByPeriod[period].sort((a, b) => {
-    const scoreA = a.data.score ?? -1
-    const scoreB = b.data.score ?? -1
-    if (scoreB !== scoreA) return scoreB - scoreA
-    return new Date(b.data.release_date).getTime() - new Date(a.data.release_date).getTime()
-  })
-})
+    const scoreA = a.data.score ?? -1;
+    const scoreB = b.data.score ?? -1;
+    if (scoreB !== scoreA) return scoreB - scoreA;
+    return (
+      new Date(b.data.release_date).getTime() -
+      new Date(a.data.release_date).getTime()
+    );
+  });
+});
 
 // Period labels in descending order
 const periods = Object.keys(moviesByPeriod).sort((a, b) => {
-  const numA = parseInt(a)
-  const numB = parseInt(b)
-  return numB - numA
-})
+  const numA = parseInt(a);
+  const numB = parseInt(b);
+  return numB - numA;
+});
 ---
 
 <Layout title="Movies" description="Movie Reviews">
@@ -56,7 +59,7 @@ const periods = Object.keys(moviesByPeriod).sort((a, b) => {
             <h2 class="text-3xl font-bold tracking-tight md:text-4xl">
               {period}
             </h2>
-            <div class="h-px flex-1 bg-linear-to-r from-border to-transparent" />
+            <div class="from-border h-px flex-1 bg-linear-to-r to-transparent" />
           </div>
 
           <div class="grid grid-cols-3 gap-3 md:grid-cols-5 lg:grid-cols-7">
@@ -66,8 +69,12 @@ const periods = Object.keys(moviesByPeriod).sort((a, b) => {
                 imgSrc={post.data.cover_art_url}
                 imgAlt={post.data.title}
                 title={post.data.title}
-                // subtitle={post.data.director ? post.data.director : post.data.studio}
-                subtitle={new Date(post.data.release_date).getFullYear().toString()}
+                subtitle={
+                  post.data.director ? post.data.director : post.data.studio
+                }
+                subtitle={new Date(post.data.release_date)
+                  .getFullYear()
+                  .toString()}
                 transitionName={`transition-${post.slug}`}
                 ariaLabel={`${post.data.title} directed by ${post.data.director ? post.data.director : post.data.studio}`}
               />
