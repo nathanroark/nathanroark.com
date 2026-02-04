@@ -13,25 +13,24 @@ const musicPosts = (await getCollection("music")).sort((a, b) =>
 );
 
 // Group albums by year or decade
-const albumsByPeriod = musicPosts
-  .reduce(
-    (acc, post) => {
-      const year = new Date(post.data.release_date).getFullYear();
-      let period: string;
-      if (year >= 2020) {
-        period = String(year);
-      } else {
-        const decade = Math.floor(year / 10) * 10;
-        period = `${decade}s`;
-      }
-      if (!acc[period]) {
-        acc[period] = [];
-      }
-      acc[period].push(post);
-      return acc;
-    },
-    {} as Record<string, typeof musicPosts>,
-  );
+const albumsByPeriod = musicPosts.reduce(
+  (acc, post) => {
+    const year = new Date(post.data.release_date).getFullYear();
+    let period: string;
+    if (year >= 2010) {
+      period = String(year);
+    } else {
+      const decade = Math.floor(year / 10) * 10;
+      period = `${decade}s`;
+    }
+    if (!acc[period]) {
+      acc[period] = [];
+    }
+    acc[period].push(post);
+    return acc;
+  },
+  {} as Record<string, typeof musicPosts>,
+);
 
 // Sort albums within each period by score (highest first)
 Object.keys(albumsByPeriod).forEach((period) => {
@@ -59,9 +58,9 @@ const totalAlbums = musicPosts.length;
       <div>
         <h1 class="text-4xl font-bold tracking-tight md:text-5xl">Music</h1>
         <!-- <p class="mt-1 text-muted-foreground">{totalAlbums} albums by year</p> -->
-      <!-- </div>  -->
-      
-      <!-- <div class="flex items-center gap-2">
+    <!-- </div>  -->
+
+    <!-- <div class="flex items-center gap-2">
         <div class="inline-flex rounded-lg border border-border bg-card p-1">
           <a
             href="?scores=show"
@@ -87,8 +86,8 @@ const totalAlbums = musicPosts.length;
           </a>
         </div> -->
 
-        <!-- Browse link -->
-        <!-- <a
+    <!-- Browse link -->
+    <!-- <a
           href="/music/browse"
           class="inline-flex items-center gap-2 rounded-lg border border-border bg-card px-3 py-2 text-sm font-medium text-foreground transition-colors hover:bg-accent"
         >
@@ -109,7 +108,7 @@ const totalAlbums = musicPosts.length;
             <h2 class="text-3xl font-bold tracking-tight md:text-4xl">
               {period}
             </h2>
-            <div class="h-px flex-1 bg-linear-to-r from-border to-transparent" />
+            <div class="from-border h-px flex-1 bg-linear-to-r to-transparent" />
           </div>
 
           <div class="grid grid-cols-3 gap-3 md:grid-cols-5 lg:grid-cols-7">
