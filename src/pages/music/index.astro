@@ -1,6 +1,7 @@
 ---
 import Layout from "@/layouts/layout.astro";
 import AlbumCard from "@/components/album-card.astro";
+import SectionHeader from "@/components/section-header.astro";
 import { getCollection } from "astro:content";
 
 // Get query params for server-side state
@@ -42,76 +43,21 @@ Object.keys(albumsByPeriod).forEach((period) => {
 });
 
 // Get periods in descending order
-const periods = Object.keys(albumsByPeriod).sort((a, b) => {
-  const numA = a.endsWith("s") ? parseInt(a) : parseInt(a);
-  const numB = b.endsWith("s") ? parseInt(b) : parseInt(b);
-  return numB - numA;
-});
+const periods = Object.keys(albumsByPeriod).sort((a, b) => parseInt(b) - parseInt(a));
 
 const totalAlbums = musicPosts.length;
 ---
 
 <Layout title="Music" description="Music Reviews">
-  <div class="space-y-8">
-    <!-- Header with controls -->
-    <!-- <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between pb-8">
-      <div>
-        <h1 class="text-4xl font-bold tracking-tight md:text-5xl">Music</h1>
-        <!-- <p class="mt-1 text-muted-foreground">{totalAlbums} albums by year</p> -->
-    <!-- </div>  -->
+  <div class="space-y-12 pt-4">
+    <SectionHeader as="h1" title="Music" meta={`${totalAlbums} albums`} />
 
-    <!-- <div class="flex items-center gap-2">
-        <div class="inline-flex rounded-lg border border-border bg-card p-1">
-          <a
-            href="?scores=show"
-            class:list={[
-              "rounded-md px-3 py-1.5 text-sm font-medium transition-colors",
-              showScores
-                ? "bg-primary text-primary-foreground"
-                : "text-muted-foreground hover:text-foreground"
-            ]}
-          >
-            Scores
-          </a>
-          <a
-            href="?scores=hide"
-            class:list={[
-              "rounded-md px-3 py-1.5 text-sm font-medium transition-colors",
-              !showScores
-                ? "bg-primary text-primary-foreground"
-                : "text-muted-foreground hover:text-foreground"
-            ]}
-          >
-            No Scores
-          </a>
-        </div> -->
-
-    <!-- Browse link -->
-    <!-- <a
-          href="/music/browse"
-          class="inline-flex items-center gap-2 rounded-lg border border-border bg-card px-3 py-2 text-sm font-medium text-foreground transition-colors hover:bg-accent"
-        >
-          <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <circle cx="11" cy="11" r="8"/>
-            <path d="m21 21-4.35-4.35"/>
-          </svg>
-          Browse
-        </a>
-      </div>
-    </div> -->
-
-    <!-- Album sections -->
     {
       periods.map((period) => (
         <section class="space-y-4">
-          <div class="flex items-center gap-4">
-            <h2 class="text-3xl font-bold tracking-tight md:text-4xl">
-              {period}
-            </h2>
-            <div class="from-border h-px flex-1 bg-linear-to-r to-transparent" />
-          </div>
+          <SectionHeader title={period} meta={`${albumsByPeriod[period].length}`} />
 
-          <div class="grid grid-cols-3 gap-3 md:grid-cols-5 lg:grid-cols-7">
+          <div class="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-5 md:gap-4 lg:grid-cols-7">
             {albumsByPeriod[period].map((post: any) => (
               <AlbumCard
                 href={`/music/${post.id}`}

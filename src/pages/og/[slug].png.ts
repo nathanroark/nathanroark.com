@@ -1,26 +1,27 @@
 // src/pages/og-image-only/[slug].png.ts
-export const prerender = true
+export const prerender = true;
 
-import { getCollection } from 'astro:content'
-import { Resvg } from '@resvg/resvg-js'
-import type { APIContext } from 'astro'
-import sharp from 'sharp'
+import { getCollection } from "astro:content";
+import { Resvg } from "@resvg/resvg-js";
+import type { APIContext } from "astro";
+import sharp from "sharp";
 
 // Generate paths for ALL collections
 export async function getStaticPaths() {
-  const [musicPosts
+  const [
+    musicPosts,
     // , bookPosts, animePosts, moviePosts
   ] = await Promise.all([
-    getCollection('music'),
+    getCollection("music"),
     // getCollection('books'),
     // getCollection('anime'),
     // getCollection('movies'),
-  ])
+  ]);
 
   return [
     ...musicPosts.map((post) => ({
       params: { slug: post.id },
-      props: { collection: 'music', post }
+      props: { collection: "music", post },
     })),
     // ...bookPosts.map((post) => ({
     //   params: { slug: post.id },
@@ -34,47 +35,45 @@ export async function getStaticPaths() {
     //   params: { slug: post.id },
     //   props: { collection: 'movies', post }
     // })),
-  ]
+  ];
 }
 
 export async function GET({ params, site, props }: APIContext) {
-  const { slug } = params
-  const { collection, post } = props as { collection: string; post: any }
+  const { slug } = params;
+  const { collection, post } = props as { collection: string; post: any };
 
-  if (!post) return new Response('Not found', { status: 404 })
+  if (!post) return new Response("Not found", { status: 404 });
 
-  const width = 630
-  const height = 630
-  const cover = String(post.data.cover_art_url ?? '')
+  const width = 630;
+  const height = 630;
+  const cover = String(post.data.cover_art_url ?? "");
 
   // absolute URL for local /assets paths
-  const coverUrl = cover.startsWith('http')
-    ? cover
-    : new URL(cover, site ?? 'http://localhost:4321').toString()
+  const coverUrl = cover.startsWith("http") ? cover : new URL(cover, site ?? "http://localhost:4321").toString();
 
   // fetch and normalize any format → PNG
-  const resp = await fetch(coverUrl)
-  if (!resp.ok) return new Response('cover fetch failed', { status: 500 })
-  const srcBuf = await resp.arrayBuffer()
-  const pngBuf = await sharp(srcBuf).png().toBuffer()
-  const dataHref = `data:image/png;base64,${pngBuf.toString('base64')}`
+  const resp = await fetch(coverUrl);
+  if (!resp.ok) return new Response("cover fetch failed", { status: 500 });
+  const srcBuf = await resp.arrayBuffer();
+  const pngBuf = await sharp(srcBuf).png().toBuffer();
+  const dataHref = `data:image/png;base64,${pngBuf.toString("base64")}`;
 
   // center the image square
-  const size = Math.min(width, height) // square size that fits in frame
-  const x = (width - size) / 2
-  const y = (height - size) / 2
+  const size = Math.min(width, height); // square size that fits in frame
+  const x = (width - size) / 2;
+  const y = (height - size) / 2;
 
   const svg = `
   <svg width="${width}" height="${height}" viewBox="0 0 ${width} ${height}" xmlns="http://www.w3.org/2000/svg">
     <image href="${dataHref}" x="${x}" y="${y}" width="${size}" height="${size}" preserveAspectRatio="xMidYMid slice" />
-  </svg>`
+  </svg>`;
 
-  const png = new Resvg(svg, { fitTo: { mode: 'width', value: width } }).render()
+  const png = new Resvg(svg, { fitTo: { mode: "width", value: width } }).render();
 
   return new Response(new Uint8Array(png.asPng()), {
     headers: {
-      'Content-Type': 'image/png',
-      'Cache-Control': 'public, max-age=31536000, immutable',
+      "Content-Type": "image/png",
+      "Cache-Control": "public, max-age=31536000, immutable",
     },
-  })
+  });
 }

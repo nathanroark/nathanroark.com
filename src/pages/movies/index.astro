@@ -1,6 +1,7 @@
 ---
 import Layout from "@/layouts/layout.astro";
 import Card from "@/components/card.astro";
+import SectionHeader from "@/components/section-header.astro";
 
 import { getCollection } from "astro:content";
 
@@ -9,18 +10,12 @@ const posts = (await getCollection("movies")).sort((a, b) =>
   new Date(a.data.release_date) > new Date(b.data.release_date) ? -1 : 1,
 );
 
-// Group movies by year (2020 and later) or decade (before 2020)
+// Group movies by decade
 const moviesByPeriod = posts.reduce(
   (acc, post) => {
     const year = new Date(post.data.release_date).getFullYear();
-    let period: string;
-
-    // if (year >= 2020) {
-    //   period = String(year)
-    // } else {
     const decade = Math.floor(year / 10) * 10;
-    period = `${decade}s`;
-    // }
+    const period = `${decade}s`;
 
     if (!acc[period]) acc[period] = [];
     acc[period].push(post);
@@ -35,47 +30,33 @@ Object.keys(moviesByPeriod).forEach((period) => {
     const scoreA = a.data.score ?? -1;
     const scoreB = b.data.score ?? -1;
     if (scoreB !== scoreA) return scoreB - scoreA;
-    return (
-      new Date(b.data.release_date).getTime() -
-      new Date(a.data.release_date).getTime()
-    );
+    return new Date(b.data.release_date).getTime() - new Date(a.data.release_date).getTime();
   });
 });
 
 // Period labels in descending order
-const periods = Object.keys(moviesByPeriod).sort((a, b) => {
-  const numA = parseInt(a);
-  const numB = parseInt(b);
-  return numB - numA;
-});
+const periods = Object.keys(moviesByPeriod).sort((a, b) => parseInt(b) - parseInt(a));
 ---
 
 <Layout title="Movies" description="Movie Reviews">
-  <div class="space-y-8">
+  <div class="space-y-12 pt-4">
+    <SectionHeader as="h1" title="Movies" meta={`${posts.length} films`} />
+
     {
       periods.map((period) => (
         <section class="space-y-4">
-          <div class="flex items-center gap-4">
-            <h2 class="text-3xl font-bold tracking-tight md:text-4xl">
-              {period}
-            </h2>
-            <div class="from-border h-px flex-1 bg-linear-to-r to-transparent" />
-          </div>
+          <SectionHeader title={period} meta={`${moviesByPeriod[period].length}`} />
 
-          <div class="grid grid-cols-3 gap-3 md:grid-cols-5 lg:grid-cols-7">
+          <div class="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-5 md:gap-4 lg:grid-cols-7">
             {moviesByPeriod[period].map((post: any) => (
               <Card
                 href={`/movies/${post.id}`}
                 imgSrc={post.data.cover_art_url}
                 imgAlt={post.data.title}
                 title={post.data.title}
-                subtitle={
-                  post.data.director ? post.data.director : post.data.studio
-                }
-                subtitle={new Date(post.data.release_date)
-                  .getFullYear()
-                  .toString()}
-                transitionName={`transition-${post.slug}`}
+                subtitle={new Date(post.data.release_date).getFullYear().toString()}
+                score={post.data.score}
+                transitionName={`transition-${post.id}`}
                 ariaLabel={`${post.data.title} directed by ${post.data.director ? post.data.director : post.data.studio}`}
               />
             ))}

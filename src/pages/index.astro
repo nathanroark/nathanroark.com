@@ -2,6 +2,7 @@
 import Layout from "@/layouts/layout.astro";
 import HomeSection from "@/components/home-section.astro";
 import { getCollection } from "astro:content";
+import { siteConfig } from "@/config/site";
 
 const ITEMS_PER_SECTION = 14;
 const currentYear = new Date().getFullYear();
@@ -60,26 +61,22 @@ const bookPosts = (await getCollection("books"))
   .slice(0, ITEMS_PER_SECTION);
 ---
 
-<Layout
-  title="Nathan's Blog"
-  description="A blog about music, movies, anime, and books"
->
-  <div class="mx-auto flex w-full flex-col space-y-16 pt-4">
-    <div>
-      <h1 class="text-5xl font-bold">Nathan's Blog</h1>
-      <p class="text-xl">
-        A blog for me to post about music, movies, anime, and books
-      </p>
-    </div>
-
-    <HomeSection title="Music" href="music/" posts={musicPosts} type="music" />
-    <HomeSection title="Book" href="books/" posts={bookPosts} type="books" />
+<Layout title={siteConfig.title} description={siteConfig.description}>
+  <div class="mx-auto flex w-full flex-col space-y-14 pt-4">
+    <header class="space-y-3 border-b border-white/10 pb-8">
+      <h1 class="text-5xl font-bold tracking-tight md:text-6xl">
+        {siteConfig.title}
+      </h1>
+      <p class="max-w-2xl text-lg text-white/60">{siteConfig.description}</p>
+    </header>
+    <HomeSection title="Music" href="/music" posts={musicPosts} type="music" />
+    <HomeSection title="Books" href="/books" posts={bookPosts} type="books" />
     <HomeSection
-      title="Movie"
-      href="movies/"
+      title="Movies"
+      href="/movies"
       posts={moviePosts}
       type="movies"
     />
-    <HomeSection title="Anime" href="anime/" posts={animePosts} type="anime" />
+    <HomeSection title="Anime" href="/anime" posts={animePosts} type="anime" />
   </div>
 </Layout>

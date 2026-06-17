@@ -1,11 +1,11 @@
 ---
 interface Props {
-  imgSrc: string
-  opacity?: number // 0–1
-  blur?: number // px
-  animated?: boolean
+  imgSrc: string;
+  opacity?: number; // 0–1
+  blur?: number; // px
+  animated?: boolean;
 }
-const { imgSrc, opacity = 1.0, blur = 62, animated = true } = Astro.props as Props
+const { imgSrc, opacity = 1.0, blur = 62, animated = true } = Astro.props as Props;
 ---
 
 <style>
@@ -60,11 +60,11 @@ const { imgSrc, opacity = 1.0, blur = 62, animated = true } = Astro.props as Pro
 </style>
 
 <div
-  class={`abs-root ${animated ? 'abs-animated' : ''}`}
+  class={`abs-root ${animated ? "abs-animated" : ""}`}
   style={{
-    '--abs-img': `url(${imgSrc})`,
-    '--abs-opacity': String(opacity),
-    '--abs-blur': `${blur}px`,
+    "--abs-img": `url(${imgSrc})`,
+    "--abs-opacity": String(opacity),
+    "--abs-blur": `${blur}px`,
   }}
 >
   <div class="abs-bg" aria-hidden="true"></div>

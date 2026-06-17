@@ -14,10 +14,8 @@ export async function getStaticPaths() {
 const { post, cleanSlug } = Astro.props;
 const { Content } = await render(post);
 ---
-<Layout
-  title={post.data.title}
-  description={`${post.data.title} - ${post.data.studio}`}
->
+
+<Layout title={post.data.title} description={`${post.data.title} - ${post.data.studio}`}>
   <div class="overflow-hidden border-b border-zinc-800 px-6 lg:px-0">
     <div class="mx-auto flex w-fit flex-col md:flex-row">
       <div class="relative mr-32 w-72 py-2 shadow-xl md:w-auto">
@@ -26,7 +24,7 @@ const { Content } = await render(post);
           alt={cleanSlug}
           width="300"
           height="300"
-          class="relative block rounded-md bg-white"
+          class="relative block bg-white"
           style={`view-transition-name: transition-${cleanSlug};`}
         />
       </div>
@@ -37,11 +35,7 @@ const { Content } = await render(post);
         <p class="mt-2 text-lg">
           {post.data.genre[0]}
         </p>
-        {
-          post.data.releaseDate && (
-            <p class="mt-2 text-lg">{post.data.releaseDate.toLocaleDateString()}</p>
-          )
-        }
+        {post.data.releaseDate && <p class="mt-2 text-lg">{post.data.releaseDate.toLocaleDateString()}</p>}
         {
           post.data.startDate && post.data.endDate && (
             <p class="mt-2 text-lg">
@@ -52,9 +46,7 @@ const { Content } = await render(post);
       </div>
     </div>
   </div>
-  <div
-    class="md:prose-md prose mx-auto px-6 py-2 dark:prose-invert md:prose-lg xl:prose-xl lg:px-0"
-  >
+  <div class="md:prose-md prose dark:prose-invert md:prose-lg xl:prose-xl mx-auto px-6 py-2 lg:px-0">
     <Content />
   </div>
 </Layout>

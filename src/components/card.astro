@@ -1,22 +1,25 @@
 ---
-import AstroImage from '@/components/astro-image.astro'
+import AstroImage from "@/components/astro-image.astro";
 
 interface Props {
-  href: string
+  href: string;
   /** Main image */
-  imgSrc: string
-  imgAlt: string
+  imgSrc: string;
+  imgAlt: string;
   /** Top line (bold) */
-  title: string
+  title: string;
   /** Second line (muted) */
-  subtitle?: string
+  subtitle?: string;
+  /** Optional rating (0–10) shown as a corner badge */
+  score?: number;
   /** Optional unique transition name */
-  transitionName?: string
-  /** Extra classes for the outer anchor or card shell */
-  class?: string
-  cardClass?: string
+  transitionName?: string;
+  /** Aspect ratio of the cover frame */
+  aspectClass?: string;
+  /** Extra classes for the outer anchor */
+  class?: string;
   /** Accessible label for the link */
-  ariaLabel?: string
+  ariaLabel?: string;
 }
 
 const {
@@ -25,22 +28,31 @@ const {
   imgAlt,
   title,
   subtitle,
+  score,
   transitionName,
-  class: anchorClass = 'flex flex-col',
-  // cardClass = 'flex h-full flex-col justify-between rounded border border-zinc-700 p-2 dark:bg-zinc-900 transition-all duration-300 hover:border-zinc-500 dark:hover:border-zinc-500',
-  cardClass = 'flex h-full flex-col justify-between rounded transition-all duration-300',
+  aspectClass = "aspect-[2/3]",
+  class: anchorClass = "",
   ariaLabel,
-} = Astro.props as Props
+} = Astro.props as Props;
 ---
 
-<a href={href} class={anchorClass} aria-label={ariaLabel ?? title}>
-  <div class={cardClass}>
-    <div transition:name={transitionName} class="m-auto">
-      <AstroImage src={imgSrc} alt={imgAlt} width={200} height={200} />
+<a href={href} class={`group media-card flex flex-col ${anchorClass}`} aria-label={ariaLabel ?? title}>
+  <div class={`media-frame ${aspectClass}`}>
+    <div transition:name={transitionName} class="h-full w-full">
+      <AstroImage src={imgSrc} alt={imgAlt} width={400} height={600} />
     </div>
-    <div>
-      <p class="truncate pt-2 text-sm">{title}</p>
-      {subtitle && <p class="truncate text-xs font-light text-white/60">{subtitle}</p>}
-    </div>
+
+    {
+      score !== undefined && (
+        <div class="absolute top-1.5 right-1.5 bg-black/60 px-1.5 py-0.5 text-xs font-semibold text-white tabular-nums backdrop-blur-sm">
+          {score}
+        </div>
+      )
+    }
+  </div>
+
+  <div class="px-0.5 pt-2.5">
+    <p class="truncate text-sm font-medium text-white/90">{title}</p>
+    {subtitle && <p class="truncate text-xs text-white/50">{subtitle}</p>}
   </div>
 </a>

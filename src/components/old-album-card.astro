@@ -1,15 +1,15 @@
 ---
-import AstroImage from '@/components/astro-image.astro'
+import AstroImage from "@/components/astro-image.astro";
 
 interface Props {
-  href: string
-  imgSrc: string
-  imgAlt: string
-  album: string
-  artist: string
-  transitionName?: string
-  anchorClass?: string
-  cardClass?: string
+  href: string;
+  imgSrc: string;
+  imgAlt: string;
+  album: string;
+  artist: string;
+  transitionName?: string;
+  anchorClass?: string;
+  cardClass?: string;
 }
 
 const {
@@ -19,9 +19,9 @@ const {
   album,
   artist,
   transitionName,
-  anchorClass = 'flex flex-col',
-  cardClass = 'flex h-full flex-col justify-between rounded border border-zinc-700 p-2 dark:bg-zinc-900',
-} = Astro.props as Props
+  anchorClass = "flex flex-col",
+  cardClass = "flex h-full flex-col justify-between rounded border border-zinc-700 p-2 dark:bg-zinc-900",
+} = Astro.props as Props;
 ---
 
 <a href={href} class={anchorClass} aria-label={`${album} by ${artist}`}>
@@ -33,20 +33,18 @@ const {
           class="absolute inset-0"
           style={{
             backgroundImage: `url(${imgSrc})`,
-            backgroundSize: 'cover', // fill both axes, no distortion
-            backgroundPosition: 'center',
-            backgroundRepeat: 'no-repeat',
-            transform: 'scale(1.06)', // hide blur edges
-            filter: 'blur(7px) saturate(120%) brightness(1.0)',
+            backgroundSize: "cover", // fill both axes, no distortion
+            backgroundPosition: "center",
+            backgroundRepeat: "no-repeat",
+            transform: "scale(1.06)", // hide blur edges
+            filter: "blur(7px) saturate(120%) brightness(1.0)",
           }}
           aria-hidden="true"
         >
         </div>
 
         <!-- optional overlay to enhance streak illusion -->
-        <div
-          class="absolute inset-0 bg-gradient-to-r from-black/20 via-transparent to-black/20 mix-blend-overlay"
-        >
+        <div class="absolute inset-0 bg-gradient-to-r from-black/20 via-transparent to-black/20 mix-blend-overlay">
         </div>
 
         <!-- main art -->
@@ -57,10 +55,7 @@ const {
         </div>
 
         <!-- subtle vignette -->
-        <div
-          class="pointer-events-none absolute inset-0 bg-gradient-to-br from-black/10 to-black/0"
-        >
-        </div>
+        <div class="pointer-events-none absolute inset-0 bg-gradient-to-br from-black/10 to-black/0"></div>
       </div>
     </div>
 
