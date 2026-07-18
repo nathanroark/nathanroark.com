@@ -24,6 +24,7 @@
   "devDependencies": {
     "@types/node": "^25.9.3",
     "prettier": "^3.7.4",
-    "prettier-plugin-astro": "^0.14.1"
+    "prettier-plugin-astro": "^0.14.1",
+    "wrangler": "^4.59.2"
   }
 }
