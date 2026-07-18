@@ -32,8 +32,8 @@ const musicPosts = (await getCollection("music")).map((post) => ({
     <div class="filter-bar">
       <div class="search-wrapper">
         <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <circle cx="11" cy="11" r="8"/>
-          <path d="m21 21-4.35-4.35"/>
+          <circle cx="11" cy="11" r="8"></circle>
+          <path d="m21 21-4.35-4.35"></path>
         </svg>
         <input
           type="search"
@@ -44,12 +44,12 @@ const musicPosts = (await getCollection("music")).map((post) => ({
         />
         <kbd class="search-hint">/</kbd>
       </div>
-      
+
       <div class="filter-controls">
         <div class="filter-group">
           <label class="filter-label">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="filter-icon">
-              <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/>
+              <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
             </svg>
             <select data-min-score class="filter-select">
               <option value="-1">All scores</option>
@@ -66,7 +66,7 @@ const musicPosts = (await getCollection("music")).map((post) => ({
         <div class="filter-group">
           <label class="filter-label">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="filter-icon">
-              <path d="M11 5h10M11 9h7M11 13h4M3 17l3 3 3-3M6 18V4"/>
+              <path d="M11 5h10M11 9h7M11 13h4M3 17l3 3 3-3M6 18V4"></path>
             </svg>
             <select data-sort class="filter-select">
               <option value="score-desc">Highest rated</option>
@@ -80,8 +80,8 @@ const musicPosts = (await getCollection("music")).map((post) => ({
 
         <button class="reset-btn" data-reset title="Reset filters">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/>
-            <path d="M3 3v5h5"/>
+            <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path>
+            <path d="M3 3v5h5"></path>
           </svg>
         </button>
       </div>
@@ -124,8 +124,8 @@ const musicPosts = (await getCollection("music")).map((post) => ({
       <div class="empty-state" data-empty style="display: none;">
         <div class="empty-icon">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-            <circle cx="12" cy="12" r="10"/>
-            <path d="m15 9-6 6M9 9l6 6"/>
+            <circle cx="12" cy="12" r="10"></circle>
+            <path d="m15 9-6 6M9 9l6 6"></path>
           </svg>
         </div>
         <h3 class="empty-title">No matches found</h3>
@@ -265,7 +265,9 @@ const musicPosts = (await getCollection("music")).map((post) => ({
     .search-input:focus {
       outline: none;
       border-color: var(--ring);
-      box-shadow: 0 0 0 3px var(--ring), 0 0 0 1px var(--ring);
+      box-shadow:
+        0 0 0 3px var(--ring),
+        0 0 0 1px var(--ring);
     }
 
     .search-hint {
@@ -330,7 +332,9 @@ const musicPosts = (await getCollection("music")).map((post) => ({
     .filter-select:focus {
       outline: none;
       border-color: var(--ring);
-      box-shadow: 0 0 0 3px var(--ring), 0 0 0 1px var(--ring);
+      box-shadow:
+        0 0 0 3px var(--ring),
+        0 0 0 1px var(--ring);
     }
 
     .reset-btn {
@@ -467,16 +471,36 @@ const musicPosts = (await getCollection("music")).map((post) => ({
     }
 
     /* Stagger animation */
-    .album-card-wrapper:nth-child(1) { animation-delay: 0ms; }
-    .album-card-wrapper:nth-child(2) { animation-delay: 30ms; }
-    .album-card-wrapper:nth-child(3) { animation-delay: 60ms; }
-    .album-card-wrapper:nth-child(4) { animation-delay: 90ms; }
-    .album-card-wrapper:nth-child(5) { animation-delay: 120ms; }
-    .album-card-wrapper:nth-child(6) { animation-delay: 150ms; }
-    .album-card-wrapper:nth-child(7) { animation-delay: 180ms; }
-    .album-card-wrapper:nth-child(8) { animation-delay: 210ms; }
-    .album-card-wrapper:nth-child(9) { animation-delay: 240ms; }
-    .album-card-wrapper:nth-child(10) { animation-delay: 270ms; }
+    .album-card-wrapper:nth-child(1) {
+      animation-delay: 0ms;
+    }
+    .album-card-wrapper:nth-child(2) {
+      animation-delay: 30ms;
+    }
+    .album-card-wrapper:nth-child(3) {
+      animation-delay: 60ms;
+    }
+    .album-card-wrapper:nth-child(4) {
+      animation-delay: 90ms;
+    }
+    .album-card-wrapper:nth-child(5) {
+      animation-delay: 120ms;
+    }
+    .album-card-wrapper:nth-child(6) {
+      animation-delay: 150ms;
+    }
+    .album-card-wrapper:nth-child(7) {
+      animation-delay: 180ms;
+    }
+    .album-card-wrapper:nth-child(8) {
+      animation-delay: 210ms;
+    }
+    .album-card-wrapper:nth-child(9) {
+      animation-delay: 240ms;
+    }
+    .album-card-wrapper:nth-child(10) {
+      animation-delay: 270ms;
+    }
 
     /* Empty State */
     .empty-state {
@@ -569,18 +593,18 @@ const musicPosts = (await getCollection("music")).map((post) => ({
   </style>
 
   <script is:inline>
-    const searchInput = document.querySelector('[data-search]');
-    const minScoreSelect = document.querySelector('[data-min-score]');
-    const sortSelect = document.querySelector('[data-sort]');
-    const grid = document.querySelector('[data-grid]');
-    const countEl = document.querySelector('[data-count]');
-    const emptyState = document.querySelector('[data-empty]');
-    const resetBtn = document.querySelector('[data-reset]');
-    const emptyResetBtn = document.querySelector('[data-empty-reset]');
-    const activeFiltersEl = document.querySelector('[data-active-filters]');
-    const filterTagsEl = document.querySelector('[data-filter-tags]');
+    const searchInput = document.querySelector("[data-search]");
+    const minScoreSelect = document.querySelector("[data-min-score]");
+    const sortSelect = document.querySelector("[data-sort]");
+    const grid = document.querySelector("[data-grid]");
+    const countEl = document.querySelector("[data-count]");
+    const emptyState = document.querySelector("[data-empty]");
+    const resetBtn = document.querySelector("[data-reset]");
+    const emptyResetBtn = document.querySelector("[data-empty-reset]");
+    const activeFiltersEl = document.querySelector("[data-active-filters]");
+    const filterTagsEl = document.querySelector("[data-filter-tags]");
 
-    const cards = Array.from(document.querySelectorAll('[data-card]'));
+    const cards = Array.from(document.querySelectorAll("[data-card]"));
     const totalCount = cards.length;
 
     const normalize = (value) => value.toLowerCase().trim();
@@ -602,26 +626,49 @@ const musicPosts = (await getCollection("music")).map((post) => ({
       const tags = [];
 
       if (query) {
-        tags.push({ type: 'search', label: `"${query}"`, clear: () => { searchInput.value = ''; apply(); } });
+        tags.push({
+          type: "search",
+          label: `"${query}"`,
+          clear: () => {
+            searchInput.value = "";
+            apply();
+          },
+        });
       }
 
       if (minScore > -1) {
-        tags.push({ type: 'score', label: `${minScore}+ stars`, clear: () => { minScoreSelect.value = '-1'; apply(); } });
+        tags.push({
+          type: "score",
+          label: `${minScore}+ stars`,
+          clear: () => {
+            minScoreSelect.value = "-1";
+            apply();
+          },
+        });
       }
 
-      if (sort !== 'score-desc') {
+      if (sort !== "score-desc") {
         const sortLabels = {
-          'score-asc': 'Lowest rated',
-          'release-desc': 'Newest first',
-          'release-asc': 'Oldest first',
-          'alpha': 'A → Z'
+          "score-asc": "Lowest rated",
+          "release-desc": "Newest first",
+          "release-asc": "Oldest first",
+          alpha: "A → Z",
         };
-        tags.push({ type: 'sort', label: sortLabels[sort], clear: () => { sortSelect.value = 'score-desc'; apply(); } });
+        tags.push({
+          type: "sort",
+          label: sortLabels[sort],
+          clear: () => {
+            sortSelect.value = "score-desc";
+            apply();
+          },
+        });
       }
 
       if (tags.length > 0) {
-        activeFiltersEl.style.display = 'flex';
-        filterTagsEl.innerHTML = tags.map(tag => `
+        activeFiltersEl.style.display = "flex";
+        filterTagsEl.innerHTML = tags
+          .map(
+            (tag) => `
           <span class="filter-tag" data-filter-type="${tag.type}">
             ${tag.label}
             <button class="filter-tag-remove" data-clear="${tag.type}" aria-label="Remove filter">
@@ -630,15 +677,17 @@ const musicPosts = (await getCollection("music")).map((post) => ({
               </svg>
             </button>
           </span>
-        `).join('');
+        `,
+          )
+          .join("");
 
         // Add click handlers
-        tags.forEach(tag => {
+        tags.forEach((tag) => {
           const btn = filterTagsEl.querySelector(`[data-clear="${tag.type}"]`);
-          if (btn) btn.addEventListener('click', tag.clear);
+          if (btn) btn.addEventListener("click", tag.clear);
         });
       } else {
-        activeFiltersEl.style.display = 'none';
+        activeFiltersEl.style.display = "none";
       }
     };
 
@@ -649,63 +698,63 @@ const musicPosts = (await getCollection("music")).map((post) => ({
 
       // Filter cards
       const filtered = cards.filter((card) => {
-        const title = normalize(card.dataset.title || '');
-        const artist = normalize(card.dataset.artist || '');
-        const score = parseFloat(card.dataset.score || '-1');
+        const title = normalize(card.dataset.title || "");
+        const artist = normalize(card.dataset.artist || "");
+        const score = parseFloat(card.dataset.score || "-1");
 
-        const matchesQuery = query === '' || title.includes(query) || artist.includes(query);
+        const matchesQuery = query === "" || title.includes(query) || artist.includes(query);
         const matchesScore = minScore <= -1 || score >= minScore;
         return matchesQuery && matchesScore;
       });
 
       // Sort cards - with secondary sort by release date when scores are equal
       const sorted = filtered.sort((a, b) => {
-        const scoreA = parseFloat(a.dataset.score || '-1');
-        const scoreB = parseFloat(b.dataset.score || '-1');
-        const relA = parseInt(a.dataset.release || '0', 10);
-        const relB = parseInt(b.dataset.release || '0', 10);
-        const titleA = normalize(a.dataset.title || '');
-        const titleB = normalize(b.dataset.title || '');
+        const scoreA = parseFloat(a.dataset.score || "-1");
+        const scoreB = parseFloat(b.dataset.score || "-1");
+        const relA = parseInt(a.dataset.release || "0", 10);
+        const relB = parseInt(b.dataset.release || "0", 10);
+        const titleA = normalize(a.dataset.title || "");
+        const titleB = normalize(b.dataset.title || "");
 
         switch (sort) {
-          case 'score-desc':
+          case "score-desc":
             // Primary: score descending, Secondary: release date descending (newer first)
             if (scoreB !== scoreA) return scoreB - scoreA;
             return relB - relA;
-          
-          case 'score-asc':
+
+          case "score-asc":
             // Primary: score ascending, Secondary: release date ascending (older first)
             if (scoreA !== scoreB) return scoreA - scoreB;
             return relA - relB;
-          
-          case 'release-desc':
+
+          case "release-desc":
             // Primary: release descending, Secondary: score descending
             if (relB !== relA) return relB - relA;
             return scoreB - scoreA;
-          
-          case 'release-asc':
+
+          case "release-asc":
             // Primary: release ascending, Secondary: score descending
             if (relA !== relB) return relA - relB;
             return scoreB - scoreA;
-          
-          case 'alpha':
+
+          case "alpha":
             // Primary: alphabetical, Secondary: score descending
             const cmp = titleA.localeCompare(titleB);
             if (cmp !== 0) return cmp;
             return scoreB - scoreA;
-          
+
           default:
             return scoreB - scoreA;
         }
       });
 
       // Update DOM
-      grid.innerHTML = '';
+      grid.innerHTML = "";
       sorted.forEach((card, index) => {
         // Reset animation
-        card.style.animation = 'none';
+        card.style.animation = "none";
         card.offsetHeight; // Trigger reflow
-        card.style.animation = '';
+        card.style.animation = "";
         card.style.animationDelay = `${Math.min(index * 30, 300)}ms`;
         grid.appendChild(card);
       });
@@ -716,34 +765,34 @@ const musicPosts = (await getCollection("music")).map((post) => ({
 
       // Toggle empty state
       const showEmpty = count === 0;
-      emptyState.style.display = showEmpty ? 'flex' : 'none';
-      grid.style.display = showEmpty ? 'none' : 'grid';
+      emptyState.style.display = showEmpty ? "flex" : "none";
+      grid.style.display = showEmpty ? "none" : "grid";
 
       // Update active filters display
       updateActiveFilters();
     };
 
     const resetFilters = () => {
-      searchInput.value = '';
-      minScoreSelect.value = '-1';
-      sortSelect.value = 'score-desc';
+      searchInput.value = "";
+      minScoreSelect.value = "-1";
+      sortSelect.value = "score-desc";
       apply();
     };
 
     // Event listeners
-    searchInput.addEventListener('input', debounce(apply, 150));
-    minScoreSelect.addEventListener('change', apply);
-    sortSelect.addEventListener('change', apply);
-    resetBtn.addEventListener('click', resetFilters);
-    emptyResetBtn.addEventListener('click', resetFilters);
+    searchInput.addEventListener("input", debounce(apply, 150));
+    minScoreSelect.addEventListener("change", apply);
+    sortSelect.addEventListener("change", apply);
+    resetBtn.addEventListener("click", resetFilters);
+    emptyResetBtn.addEventListener("click", resetFilters);
 
     // Keyboard shortcut for search
-    document.addEventListener('keydown', (e) => {
-      if (e.key === '/' && document.activeElement !== searchInput) {
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "/" && document.activeElement !== searchInput) {
         e.preventDefault();
         searchInput.focus();
       }
-      if (e.key === 'Escape' && document.activeElement === searchInput) {
+      if (e.key === "Escape" && document.activeElement === searchInput) {
         searchInput.blur();
       }
     });

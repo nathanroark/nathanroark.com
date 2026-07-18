@@ -1,6 +1,6 @@
 ---
 author: Cixin Liu
-published: 2008
+published: '2009'
 title: The Dark Forest
 read: "2026-02-05"
 genres: ["Science Fiction", "Hard Science Fiction"]

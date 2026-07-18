@@ -120,13 +120,41 @@
   }
   body {
     @apply bg-background text-foreground;
+    /* faint glow up top so content sits in a space instead of a void */
+    background-image: radial-gradient(120% 80% at 50% -10%, oklch(0.27 0.006 286.033 / 0.55), transparent 55%);
+    background-attachment: fixed;
   }
   body::before {
-    content: '';
+    content: "";
     position: fixed;
     inset: 0;
     background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.05'/%3E%3C/svg%3E");
     pointer-events: none;
     z-index: -1;
+  }
+}
+
+@layer components {
+  /* The shared "panel" every media item sits on. Tweak the resting/hover
+     surface values here to dial the whole grid up or down in one place. */
+  .media-card {
+    @apply border border-white/10 bg-white/[0.025] p-2;
+    transition:
+      transform 0.3s ease,
+      border-color 0.3s ease,
+      background-color 0.3s ease,
+      box-shadow 0.3s ease;
+  }
+  .media-card:hover {
+    @apply -translate-y-1 border-white/25 bg-white/[0.05];
+    box-shadow: 0 12px 28px -12px rgb(0 0 0 / 0.7);
+  }
+
+  /* Image clip used inside a media-card so every cover fills its frame. */
+  .media-frame {
+    @apply relative overflow-hidden bg-zinc-900;
+  }
+  .media-frame img {
+    @apply h-full w-full object-cover;
   }
 }

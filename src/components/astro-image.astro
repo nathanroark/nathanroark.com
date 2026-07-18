@@ -1,16 +1,23 @@
 ---
-import { Image } from 'astro:assets'
+import { Image } from "astro:assets";
 
-const { src, alt } = Astro.props
+interface Props {
+  src: string;
+  alt: string;
+  class?: string;
+  width?: number;
+  height?: number;
+  sizes?: string;
+}
+
+const {
+  src,
+  alt,
+  class: cls = "",
+  width = 400,
+  height = 400,
+  sizes = "(max-width: 600px) 200px, (max-width: 1024px) 400px, 800px",
+} = Astro.props as Props;
 ---
 
-<Image
-  class="rounded shadow"
-  src={src}
-  alt={alt}
-  width="400"
-  height="400"
-  sizes="(max-width: 600px) 200px, (max-width: 1024px) 400px, 800px"
-  format="avif"
-  quality={80}
-/>
+<Image class={cls} src={src} alt={alt} width={width} height={height} sizes={sizes} format="avif" quality={80} />

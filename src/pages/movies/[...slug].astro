@@ -18,10 +18,7 @@ const { Content } = await render(post);
 const director_or_studio = post.data.director ?? post.data.studio;
 ---
 
-<Layout
-  title={post.data.title}
-  description={`${post.data.title} - ${director_or_studio}`}
->
+<Layout title={post.data.title} description={`${post.data.title} - ${director_or_studio}`}>
   <div class="overflow-hidden border-b border-zinc-800 px-6 lg:px-0">
     <div class="mx-auto flex w-fit flex-col md:flex-row">
       <div class="relative mr-32 w-72 py-2 shadow-xl md:w-auto">
@@ -30,7 +27,7 @@ const director_or_studio = post.data.director ?? post.data.studio;
           alt={cleanSlug}
           width="300"
           height="300"
-          class="relative block rounded-md bg-white"
+          class="relative block bg-white"
           style={`view-transition-name: transition-${cleanSlug};`}
         />
       </div>
@@ -39,11 +36,7 @@ const director_or_studio = post.data.director ?? post.data.studio;
           {post.data.title}
         </h1>
         <p class="mt-3 text-3xl">
-          {
-            post.data.director && post.data.studio
-              ? `${post.data.director} - ${post.data.studio}`
-              : director_or_studio
-          }
+          {post.data.director && post.data.studio ? `${post.data.director} - ${post.data.studio}` : director_or_studio}
         </p>
         <p class="mt-2 text-lg">
           {post.data.genre[0]} — {post.data.release_date.toDateString()}
@@ -51,9 +44,7 @@ const director_or_studio = post.data.director ?? post.data.studio;
       </div>
     </div>
   </div>
-  <div
-    class="md:prose-md prose dark:prose-invert md:prose-lg xl:prose-xl mx-auto px-6 py-2 lg:px-0"
-  >
+  <div class="md:prose-md prose dark:prose-invert md:prose-lg xl:prose-xl mx-auto px-6 py-2 lg:px-0">
     <Content />
   </div>
 </Layout>

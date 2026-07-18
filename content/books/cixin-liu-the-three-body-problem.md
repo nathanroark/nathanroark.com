@@ -1,6 +1,6 @@
 ---
 author: Liu Cixin
-published: 2008
+published: '2008'
 title: The Three-Body Problem
 genres: ["Science Fiction", "Fiction"]
 read: "2026-02-01"

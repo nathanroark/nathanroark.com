@@ -1,8 +1,8 @@
 ---
-import { siteConfig } from '@/config/site'
-import { cn } from '@/lib/utils'
-import Logo from '@/components/icons/logo.astro'
-const { pathname } = Astro.url
+import { siteConfig } from "@/config/site";
+import { cn } from "@/lib/utils";
+import Logo from "@/components/icons/logo.astro";
+const { pathname } = Astro.url;
 ---
 
 <div class="hidden md:flex">
@@ -12,25 +12,25 @@ const { pathname } = Astro.url
   <nav class="flex items-center space-x-6 text-sm font-medium">
     {
       siteConfig.navLinks.map((link) => {
-        const isActive = link.href === '/' ? pathname === '/' : pathname?.startsWith(link.href)
+        const isActive = link.href === "/" ? pathname === "/" : pathname?.startsWith(link.href);
         return (
           <a
             href={link.href}
             aria-label="{link.title} Header Link"
             class={cn(
-              'relative transition-colors hover:text-foreground/80',
-              isActive ? 'text-foreground' : 'text-foreground/60',
+              "hover:text-foreground/80 relative transition-colors",
+              isActive ? "text-foreground" : "text-foreground/60",
             )}
           >
             {link.title}
             {isActive && (
               <span
-                class="pointer-events-none absolute left-0 -bottom-1 w-full h-0.5 bg-linear-to-r from-blue-500 to-cyan-400"
+                class="pointer-events-none absolute -bottom-1 left-0 h-0.5 w-full bg-linear-to-r from-blue-500 to-cyan-400"
                 aria-hidden="true"
               />
             )}
           </a>
-        )
+        );
       })
     }
   </nav>
