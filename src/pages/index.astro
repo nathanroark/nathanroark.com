@@ -11,21 +11,14 @@ const currentYear = new Date().getFullYear();
 const sortByDate = (a: any, b: any, dateField: string) =>
   new Date(a.data[dateField]) > new Date(b.data[dateField]) ? -1 : 1;
 
-const sortByScore = (a: any, b: any) =>
-  (b.data.score ?? 0) - (a.data.score ?? 0);
+const sortByScore = (a: any, b: any) => (b.data.score ?? 0) - (a.data.score ?? 0);
 
 const getAlbumsByYear = (albums: any[], year: number) =>
-  albums.filter(
-    (album) => new Date(album.data.release_date).getFullYear() === year,
-  );
+  albums.filter((album) => new Date(album.data.release_date).getFullYear() === year);
 
 // Music: Show current year albums by score, fill with best of last year if needed
-const allAlbums = (await getCollection("music")).sort((a, b) =>
-  sortByDate(a, b, "release_date"),
-);
-const thisYearAlbums = getAlbumsByYear(allAlbums, currentYear).sort(
-  sortByScore,
-);
+const allAlbums = (await getCollection("music")).sort((a, b) => sortByDate(a, b, "release_date"));
+const thisYearAlbums = getAlbumsByYear(allAlbums, currentYear).sort(sortByScore);
 
 const musicPosts =
   thisYearAlbums.length >= ITEMS_PER_SECTION
@@ -38,9 +31,7 @@ const musicPosts =
       ];
 
 // Movies: Top rated
-const moviePosts = (await getCollection("movies"))
-  .sort(sortByScore)
-  .slice(0, ITEMS_PER_SECTION);
+const moviePosts = (await getCollection("movies")).sort(sortByScore).slice(0, ITEMS_PER_SECTION);
 
 // Anime: Most recent
 const animePosts = (await getCollection("anime"))
@@ -56,9 +47,7 @@ const animePosts = (await getCollection("anime"))
   .slice(0, ITEMS_PER_SECTION);
 
 // Books: Most recently read
-const bookPosts = (await getCollection("books"))
-  .sort((a, b) => sortByDate(a, b, "read"))
-  .slice(0, ITEMS_PER_SECTION);
+const bookPosts = (await getCollection("books")).sort((a, b) => sortByDate(a, b, "read")).slice(0, ITEMS_PER_SECTION);
 ---
 
 <Layout title={siteConfig.title} description={siteConfig.description}>
@@ -71,12 +60,7 @@ const bookPosts = (await getCollection("books"))
     </header>
     <HomeSection title="Music" href="/music" posts={musicPosts} type="music" />
     <HomeSection title="Books" href="/books" posts={bookPosts} type="books" />
-    <HomeSection
-      title="Movies"
-      href="/movies"
-      posts={moviePosts}
-      type="movies"
-    />
+    <HomeSection title="Movies" href="/movies" posts={moviePosts} type="movies" />
     <HomeSection title="Anime" href="/anime" posts={animePosts} type="anime" />
   </div>
 </Layout>
