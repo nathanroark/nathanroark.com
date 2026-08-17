@@ -4,6 +4,7 @@
 
 ```text
 /
+├── content/
 ├── public/
 ├── src/
 │   └── pages/
