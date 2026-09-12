@@ -51,12 +51,11 @@ const bookPosts = (await getCollection("books")).sort((a, b) => sortByDate(a, b,
 ---
 
 <Layout title={siteConfig.title} description={siteConfig.description}>
-  <div class="mx-auto flex w-full flex-col space-y-14 pt-4">
-    <header class="space-y-3 border-b border-white/10 pb-8">
+  <div class="mx-auto flex w-full flex-col space-y-16 pt-4">
+    <header class="pb-8">
       <h1 class="text-5xl font-bold tracking-tight md:text-6xl">
         {siteConfig.title}
       </h1>
-      <p class="max-w-2xl text-lg text-white/60">{siteConfig.description}</p>
     </header>
     <HomeSection title="Music" href="/music" posts={musicPosts} type="music" />
     <HomeSection title="Books" href="/books" posts={bookPosts} type="books" />

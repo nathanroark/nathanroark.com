@@ -1,10 +1,10 @@
 ---
-import ArrowRight from "@/components/icons/arrow-right.astro";
+import ArrowUpRight from "@/components/icons/arrow-up-right.astro";
 
 interface Props {
   /** Section / page title */
   title: string;
-  /** Optional link target — renders a "View all" affordance when present */
+  /** Optional link target — makes the title itself a link */
   href?: string;
   /** Small muted label on the right (e.g. an item count) */
   meta?: string;
@@ -13,15 +13,29 @@ interface Props {
 }
 
 const { title, href, meta, as: Tag = "h2" } = Astro.props as Props;
-const sizeClass = Tag === "h1" ? "text-4xl md:text-5xl" : "text-2xl md:text-3xl";
+const sizeClass = Tag === "h1" ? "text-4xl md:text-5xl" : "text-3xl md:text-4xl";
+const arrowSize = Tag === "h1" ? 30 : 26;
 ---
 
 <div class="flex items-end justify-between gap-4 border-b border-white/10 pb-3">
   <Tag class={`font-bold tracking-tight ${sizeClass}`}>
     {
       href ? (
-        <a href={href} class="transition-opacity hover:opacity-70">
+        <a
+          href={href}
+          aria-label={`View all ${title}`}
+          class="group/sh focus-visible:ring-offset-background relative inline-flex items-baseline gap-2 rounded-sm focus-visible:ring-2 focus-visible:ring-cyan-400/70 focus-visible:ring-offset-4 focus-visible:outline-none"
+        >
           {title}
+          {/* Resting arrow is the "this goes somewhere" cue — visible before any hover. */}
+          <ArrowUpRight
+            size={arrowSize}
+            class="self-center text-white/35 transition-all duration-300 group-hover/sh:translate-x-0.5 group-hover/sh:-translate-y-0.5 group-hover/sh:text-white"
+          />
+          <span
+            class="pointer-events-none absolute -bottom-1 left-0 h-0.5 w-0 bg-linear-to-r from-blue-500 to-cyan-400 transition-all duration-300 group-hover/sh:w-full"
+            aria-hidden="true"
+          />
         </a>
       ) : (
         title
@@ -29,18 +43,5 @@ const sizeClass = Tag === "h1" ? "text-4xl md:text-5xl" : "text-2xl md:text-3xl"
     }
   </Tag>
 
-  {
-    href ? (
-      <a
-        href={href}
-        class="group/sh inline-flex shrink-0 items-center gap-1 pb-1 text-sm font-medium text-white/55 transition-colors hover:text-white"
-        aria-label={`View all ${title}`}
-      >
-        View all
-        <ArrowRight size={16} class="transition-transform duration-300 group-hover/sh:translate-x-0.5" />
-      </a>
-    ) : (
-      meta && <span class="shrink-0 pb-1.5 text-sm text-white/40">{meta}</span>
-    )
-  }
+  {meta && <span class="shrink-0 pb-1.5 text-sm text-white/40">{meta}</span>}
 </div>

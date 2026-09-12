@@ -16,7 +16,7 @@ export type SiteConfig = {
 };
 
 export const siteConfig: SiteConfig = {
-  title: "Nathan's Blog",
+  title: "Nathan's Library",
   url: "https://nathanroark.com",
   ogImage: new URL("https://nathanroark.com/og.jpg"),
   description: "A log of the music, books, movies, and anime",

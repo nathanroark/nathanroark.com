@@ -1,5 +1,5 @@
 ---
-const { size = 24, ...props } = Astro.props;
+const { size = 24, class: cls, ...props } = Astro.props;
 ---
 
 <svg
@@ -13,6 +13,6 @@ const { size = 24, ...props } = Astro.props;
   stroke-width="2"
   stroke-linecap="round"
   stroke-linejoin="round"
-  class="lucide lucide-arrow-right-icon lucide-arrow-right"
-  ><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg
+  class:list={["lucide lucide-arrow-up-right-icon lucide-arrow-up-right", cls]}
+  ><path d="M7 7h10v10"></path><path d="M7 17 17 7"></path></svg
 >
