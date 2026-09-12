@@ -14,10 +14,9 @@ interface Props {
 
 const { title, href, meta, as: Tag = "h2" } = Astro.props as Props;
 const sizeClass = Tag === "h1" ? "text-4xl md:text-5xl" : "text-3xl md:text-4xl";
-const arrowSize = Tag === "h1" ? 30 : 26;
 ---
 
-<div class="flex items-end justify-between gap-4 border-b border-white/10 pb-3">
+<div class="flex items-end justify-between pl-2">
   <Tag class={`font-bold tracking-tight ${sizeClass}`}>
     {
       href ? (
@@ -29,7 +28,7 @@ const arrowSize = Tag === "h1" ? 30 : 26;
           {title}
           {/* Resting arrow is the "this goes somewhere" cue — visible before any hover. */}
           <ArrowUpRight
-            size={arrowSize}
+            size=32
             class="self-center text-white/35 transition-all duration-300 group-hover/sh:translate-x-0.5 group-hover/sh:-translate-y-0.5 group-hover/sh:text-white"
           />
           <span
