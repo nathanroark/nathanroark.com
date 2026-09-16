@@ -138,7 +138,7 @@
   /* The shared "panel" every media item sits on. Tweak the resting/hover
      surface values here to dial the whole grid up or down in one place. */
   .media-card {
-    @apply border border-white/10 bg-white/[0.025] p-2;
+    @apply border border-white/10 bg-white/2.5 p-2;
     transition:
       transform 0.3s ease,
       border-color 0.3s ease,
@@ -146,7 +146,7 @@
       box-shadow 0.3s ease;
   }
   .media-card:hover {
-    @apply -translate-y-1 border-white/25 bg-white/[0.05];
+    @apply border-white/35 bg-white/5;
     box-shadow: 0 12px 28px -12px rgb(0 0 0 / 0.7);
   }
 
