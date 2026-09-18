@@ -1,9 +1,10 @@
 ---
 import Layout from "@/layouts/layout.astro";
-import Card from "@/components/card.astro";
+import MediaCard from "@/components/media-card.astro";
 import SectionHeader from "@/components/section-header.astro";
 
 import { getCollection } from "astro:content";
+import { movieCredit } from "@/lib/utils";
 
 // All movies sorted newest -> oldest
 const posts = (await getCollection("movies")).sort((a, b) =>
@@ -49,15 +50,16 @@ const periods = Object.keys(moviesByPeriod).sort((a, b) => parseInt(b) - parseIn
 
           <div class="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-5 md:gap-4 lg:grid-cols-7">
             {moviesByPeriod[period].map((post: any) => (
-              <Card
+              <MediaCard
                 href={`/movies/${post.id}`}
                 imgSrc={post.data.cover_art_url}
                 imgAlt={post.data.title}
                 title={post.data.title}
-                subtitle={new Date(post.data.release_date).getFullYear().toString()}
-                score={post.data.score}
+                subtitle={movieCredit(post.data)}
                 transitionName={`transition-${post.id}`}
-                ariaLabel={`${post.data.title} directed by ${post.data.director ? post.data.director : post.data.studio}`}
+                ariaLabel={
+                  movieCredit(post.data) ? `${post.data.title} directed by ${movieCredit(post.data)}` : post.data.title
+                }
               />
             ))}
           </div>

@@ -1,7 +1,7 @@
 ---
 import SectionHeader from "@/components/section-header.astro";
-import Card from "@/components/card.astro";
-import AlbumCard from "@/components/album-card.astro";
+import MediaCard from "@/components/media-card.astro";
+import { movieCredit } from "@/lib/utils";
 
 interface Props {
   title: string;
@@ -11,6 +11,18 @@ interface Props {
 }
 
 const { title, href, posts, type } = Astro.props;
+
+// Every collection spells its cover art, title and byline differently, so each
+// one gets a reader. Everything past this point is the same card.
+const READERS = {
+  music: (d: any) => ({ img: d.cover_art_url, title: d.album, subtitle: d.artist, by: "by" }),
+  movies: (d: any) => ({ img: d.cover_art_url, title: d.title, subtitle: movieCredit(d), by: "directed by" }),
+  anime: (d: any) => ({ img: d.art, title: d.title, subtitle: d.studio, by: "by" }),
+  books: (d: any) => ({ img: d.cover_image, title: d.title, subtitle: d.author, by: "by" }),
+} as const;
+
+const read = READERS[type];
+const shape = type === "music" ? "square" : "poster";
 ---
 
 <section class="space-y-4">
@@ -18,53 +30,23 @@ const { title, href, posts, type } = Astro.props;
 
   <div class="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-5 md:gap-4 lg:grid-cols-7">
     {
-      type === "music"
-        ? posts.map((post: any) => (
-            <AlbumCard
-              href={`/music/${post.id}`}
-              imgSrc={post.data.cover_art_url}
-              imgAlt={post.data.album}
-              album={post.data.album}
-              artist={post.data.artist}
-              transitionName={`transition-${post.id}`}
-            />
-          ))
-        : type === "movies"
-          ? posts.map((post: any) => (
-              <Card
-                href={`/movies/${post.id}`}
-                imgSrc={post.data.cover_art_url}
-                imgAlt={post.data.title}
-                title={post.data.title}
-                subtitle={post.data.director ? post.data.director : post.data.studio}
-                score={post.data.score}
-                transitionName={`record-${post.id}`}
-                ariaLabel={`${post.data.title} directed by ${post.data.director ? post.data.director : post.data.studio}`}
-              />
-            ))
-          : type === "anime"
-            ? posts.map((post: any) => (
-                <Card
-                  href={`/anime/${post.id}`}
-                  imgSrc={post.data.art}
-                  imgAlt={post.data.title}
-                  title={post.data.title}
-                  subtitle={post.data.studio}
-                  transitionName={`book-${post.id}`}
-                  ariaLabel={`${post.data.title} by ${post.data.studio}`}
-                />
-              ))
-            : posts.map((post: any) => (
-                <Card
-                  href={`/books/${post.id}`}
-                  imgSrc={post.data.cover_image}
-                  imgAlt={post.data.title}
-                  title={post.data.title}
-                  subtitle={post.data.author}
-                  transitionName={`book-${post.id}`}
-                  ariaLabel={`${post.data.title} by ${post.data.author}`}
-                />
-              ))
+      posts.map((post: any) => {
+        const item = read(post.data);
+        // The transition name must match the detail page, which names its hero
+        // image `transition-<slug>` — otherwise the morph never pairs up.
+        return (
+          <MediaCard
+            href={`/${type}/${post.id}`}
+            imgSrc={item.img}
+            imgAlt={item.title}
+            title={item.title}
+            subtitle={item.subtitle}
+            shape={shape}
+            transitionName={`transition-${post.id}`}
+            ariaLabel={item.subtitle ? `${item.title} ${item.by} ${item.subtitle}` : item.title}
+          />
+        );
+      })
     }
   </div>
 </section>

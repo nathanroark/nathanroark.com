@@ -1,6 +1,6 @@
 ---
 import Layout from "@/layouts/layout.astro";
-import Card from "@/components/card.astro";
+import MediaCard from "@/components/media-card.astro";
 import SectionHeader from "@/components/section-header.astro";
 
 import { getCollection } from "astro:content";
@@ -25,7 +25,7 @@ const posts = (await getCollection("anime")).sort((a, b) => {
     <div class="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 md:gap-4 lg:grid-cols-6">
       {
         posts.map((post: any) => (
-          <Card
+          <MediaCard
             href={`/anime/${post.id}`}
             imgSrc={post.data.art}
             imgAlt={post.data.title}

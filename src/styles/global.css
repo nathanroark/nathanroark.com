@@ -133,28 +133,3 @@
     z-index: -1;
   }
 }
-
-@layer components {
-  /* The shared "panel" every media item sits on. Tweak the resting/hover
-     surface values here to dial the whole grid up or down in one place. */
-  .media-card {
-    @apply border border-white/10 bg-white/2.5 p-2;
-    transition:
-      transform 0.3s ease,
-      border-color 0.3s ease,
-      background-color 0.3s ease,
-      box-shadow 0.3s ease;
-  }
-  .media-card:hover {
-    @apply border-white/35 bg-white/5;
-    box-shadow: 0 12px 28px -12px rgb(0 0 0 / 0.7);
-  }
-
-  /* Image clip used inside a media-card so every cover fills its frame. */
-  .media-frame {
-    @apply relative overflow-hidden bg-zinc-900;
-  }
-  .media-frame img {
-    @apply h-full w-full object-cover;
-  }
-}

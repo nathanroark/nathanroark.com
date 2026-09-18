@@ -1,12 +1,8 @@
 ---
 import Layout from "@/layouts/layout.astro";
-import AlbumCard from "@/components/album-card.astro";
+import MediaCard from "@/components/media-card.astro";
 import SectionHeader from "@/components/section-header.astro";
 import { getCollection } from "astro:content";
-
-// Get query params for server-side state
-const url = Astro.url;
-const showScores = url.searchParams.get("scores") !== "hide";
 
 // Get all albums sorted by release date (newest first)
 const musicPosts = (await getCollection("music")).sort((a, b) =>
@@ -59,13 +55,13 @@ const totalAlbums = musicPosts.length;
 
           <div class="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-5 md:gap-4 lg:grid-cols-7">
             {albumsByPeriod[period].map((post: any) => (
-              <AlbumCard
+              <MediaCard
                 href={`/music/${post.id}`}
                 imgSrc={post.data.cover_art_url}
                 imgAlt={post.data.album}
-                album={post.data.album}
-                artist={post.data.artist}
-                score={showScores ? post.data.score : undefined}
+                title={post.data.album}
+                subtitle={post.data.artist}
+                shape="square"
                 transitionName={`transition-${post.id}`}
               />
             ))}

@@ -1,0 +1,59 @@
+---
+import AstroImage from "@/components/astro-image.astro";
+
+// The aspect ratio and the intrinsic image size travel together so they can't
+// drift apart. Music art is 1:1; books, movies and anime are 2:3 posters.
+const SHAPES = {
+  square: { aspect: "aspect-square", width: 400, height: 400 },
+  poster: { aspect: "aspect-[2/3]", width: 400, height: 600 },
+} as const;
+
+interface Props {
+  href: string;
+  imgSrc: string;
+  imgAlt: string;
+  /** Album / Book / Movie / Anime title */
+  title: string;
+  /** Artist / Author / Director(s) / Studio */
+  subtitle?: string;
+  shape?: keyof typeof SHAPES;
+  transitionName?: string;
+  class?: string;
+  ariaLabel?: string;
+}
+
+const {
+  href,
+  imgSrc,
+  imgAlt,
+  title,
+  subtitle,
+  shape = "poster",
+  transitionName,
+  class: anchorClass = "",
+  ariaLabel,
+} = Astro.props as Props;
+
+const { aspect, width, height } = SHAPES[shape];
+const label = ariaLabel ?? (subtitle ? `${title}, ${subtitle}` : title);
+---
+
+<a
+  href={href}
+  aria-label={label}
+  class={`group relative block focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white ${aspect} ${anchorClass}`}
+>
+  {/* object-contain, never cover: art keeps its own proportions and centers. */}
+  <div transition:name={transitionName} class="h-full w-full">
+    <AstroImage src={imgSrc} alt={imgAlt} width={width} height={height} class="h-full w-full object-contain" />
+  </div>
+
+  {/* Tailwind gates group-hover behind (hover: hover), so touch never sees this. */}
+  <div
+    aria-hidden="true"
+    class="pointer-events-none absolute inset-x-0 bottom-0 bg-black/65 p-2 opacity-0 transition-opacity group-hover:opacity-100 group-focus-visible:opacity-100"
+  >
+    <p class="line-clamp-2 text-sm text-white">{title}</p>
+    {subtitle && <p class="truncate text-xs text-white/60">{subtitle}</p>}
+  </div>
+</a>

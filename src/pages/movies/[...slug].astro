@@ -2,6 +2,7 @@
 import { getCollection, render } from "astro:content";
 import Layout from "@/layouts/content-layout.astro";
 import { Image } from "astro:assets";
+import { movieCredit } from "@/lib/utils";
 
 export async function getStaticPaths() {
   const posts = await getCollection("movies");
@@ -14,11 +15,10 @@ export async function getStaticPaths() {
 const { post, cleanSlug } = Astro.props;
 const { Content } = await render(post);
 
-// TODO: handle director and/or studio better
-const director_or_studio = post.data.director ?? post.data.studio;
+const credit = movieCredit(post.data);
 ---
 
-<Layout title={post.data.title} description={`${post.data.title} - ${director_or_studio}`}>
+<Layout title={post.data.title} description={credit ? `${post.data.title} - ${credit}` : post.data.title}>
   <div class="overflow-hidden border-b border-zinc-800 px-6 lg:px-0">
     <div class="mx-auto flex w-fit flex-col md:flex-row">
       <div class="relative mr-32 w-72 py-2 shadow-xl md:w-auto">
@@ -36,7 +36,7 @@ const director_or_studio = post.data.director ?? post.data.studio;
           {post.data.title}
         </h1>
         <p class="mt-3 text-3xl">
-          {post.data.director && post.data.studio ? `${post.data.director} - ${post.data.studio}` : director_or_studio}
+          {credit && post.data.studio && credit !== post.data.studio ? `${credit} - ${post.data.studio}` : credit}
         </p>
         <p class="mt-2 text-lg">
           {post.data.genre[0]} — {post.data.release_date.toDateString()}

@@ -1,6 +1,6 @@
 ---
 import Layout from "@/layouts/layout.astro";
-import AlbumCard from "@/components/album-card.astro";
+import MediaCard from "@/components/media-card.astro";
 import { getCollection } from "astro:content";
 
 const musicPosts = (await getCollection("music")).map((post) => ({
@@ -106,13 +106,13 @@ const musicPosts = (await getCollection("music")).map((post) => ({
               data-score={post.score}
               data-release={post.releaseTs}
             >
-              <AlbumCard
+              <MediaCard
                 href={`/music/${post.id}`}
                 imgSrc={post.data.cover_art_url}
                 imgAlt={post.data.album}
-                album={post.data.album}
-                artist={post.data.artist}
-                score={post.score >= 0 ? post.score : undefined}
+                title={post.data.album}
+                subtitle={post.data.artist}
+                shape="square"
                 transitionName={`transition-${post.id}`}
               />
             </div>
@@ -152,14 +152,6 @@ const musicPosts = (await getCollection("music")).map((post) => ({
 
     .album-card-wrapper > :first-child {
       width: 100%;
-      display: block;
-    }
-
-    /* Force all images inside cards to be consistent */
-    .album-card-wrapper img {
-      width: 100%;
-      aspect-ratio: 1 / 1;
-      object-fit: cover;
       display: block;
     }
 

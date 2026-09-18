@@ -71,6 +71,8 @@ const anime = defineCollection({
 const MovieSchema = z.object({
   title: z.string(),
   director: z.string().optional(),
+  /** The co-directed films list their pair here instead of `director`. */
+  directors: z.array(z.string()).optional(),
   studio: z.string().optional(),
   genre: z.array(z.string()),
   cover_art_url: z.string(),
