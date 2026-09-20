@@ -16,7 +16,7 @@ const { title, href, meta, as: Tag = "h2" } = Astro.props as Props;
 const sizeClass = Tag === "h1" ? "text-4xl md:text-5xl" : "text-3xl md:text-4xl";
 ---
 
-<div class="flex items-end justify-between pl-2">
+<div class="flex items-end justify-between">
   <Tag class={`font-bold tracking-tight ${sizeClass}`}>
     {
       href ? (

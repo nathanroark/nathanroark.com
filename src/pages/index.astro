@@ -4,7 +4,7 @@ import HomeSection from "@/components/home-section.astro";
 import { getCollection } from "astro:content";
 import { siteConfig } from "@/config/site";
 
-const ITEMS_PER_SECTION = 14;
+const ITEMS_PER_SECTION = 12;
 const currentYear = new Date().getFullYear();
 
 // Helper functions
@@ -51,9 +51,9 @@ const bookPosts = (await getCollection("books")).sort((a, b) => sortByDate(a, b,
 ---
 
 <Layout title={siteConfig.title} description={siteConfig.description}>
-  <div class="mx-auto flex w-full flex-col space-y-16 pt-4">
-    <header class="pb-8">
-      <h1 class="text-5xl font-bold tracking-tight md:text-6xl">
+  <div class="mx-auto flex w-full flex-col space-y-16">
+    <header class="pb-2">
+      <h1 class="text-4xl font-bold tracking-tight md:text-5xl">
         {siteConfig.title}
       </h1>
     </header>
