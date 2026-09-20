@@ -16,7 +16,6 @@ const { pathname } = Astro.url;
         return (
           <a
             href={link.href}
-            aria-label="{link.title} Header Link"
             class={cn(
               "hover:text-foreground/80 relative transition-colors",
               isActive ? "text-foreground" : "text-foreground/60",

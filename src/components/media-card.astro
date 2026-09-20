@@ -17,7 +17,6 @@ interface Props {
   /** Artist / Author / Director(s) / Studio */
   subtitle?: string;
   shape?: keyof typeof SHAPES;
-  transitionName?: string;
   class?: string;
   ariaLabel?: string;
 }
@@ -29,7 +28,6 @@ const {
   title,
   subtitle,
   shape = "poster",
-  transitionName,
   class: anchorClass = "",
   ariaLabel,
 } = Astro.props as Props;
@@ -44,7 +42,7 @@ const label = ariaLabel ?? (subtitle ? `${title}, ${subtitle}` : title);
   class={`group relative block focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white ${aspect} ${anchorClass}`}
 >
   {/* object-contain, never cover: art keeps its own proportions and centers. */}
-  <div transition:name={transitionName} class="h-full w-full">
+  <div class="h-full w-full">
     <AstroImage src={imgSrc} alt={imgAlt} width={width} height={height} class="h-full w-full object-contain" />
   </div>
 

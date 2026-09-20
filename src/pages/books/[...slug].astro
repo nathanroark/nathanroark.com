@@ -19,14 +19,7 @@ const { Content } = await render(post);
   <div class="overflow-hidden border-b border-zinc-800 px-6 lg:px-0">
     <div class="mx-auto flex w-fit flex-col md:flex-row">
       <div class="relative mr-32 w-72 py-2 shadow-xl md:w-auto">
-        <Image
-          src={post.data.cover_image}
-          alt={cleanSlug}
-          width="300"
-          height="300"
-          class="relative block bg-white"
-          style={`view-transition-name: transition-${cleanSlug};`}
-        />
+        <Image src={post.data.cover_image} alt={cleanSlug} width="300" height="300" class="relative block bg-white" />
       </div>
       <div class="flex flex-col justify-center pt-8">
         <h1 class="text-5xl font-bold tracking-tight">
@@ -39,7 +32,7 @@ const { Content } = await render(post);
       </div>
     </div>
   </div>
-  <div class="md:prose-md prose dark:prose-invert md:prose-lg xl:prose-xl mx-auto px-6 py-2 lg:px-0">
+  <div class="prose dark:prose-invert md:prose-lg xl:prose-xl mx-auto px-6 py-2 lg:px-0">
     <Content />
   </div>
 </Layout>

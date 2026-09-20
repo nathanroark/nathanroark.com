@@ -81,7 +81,7 @@
 }
 
 .dark {
-  --background: oklch(0.141 0.005 285.823);
+  --background: oklch(0.17 0.006 285.823);
   --foreground: oklch(0.985 0 0);
   --card: oklch(0.21 0.006 285.885);
   --card-foreground: oklch(0.985 0 0);
@@ -121,7 +121,7 @@
   body {
     @apply bg-background text-foreground;
     /* faint glow up top so content sits in a space instead of a void */
-    background-image: radial-gradient(120% 80% at 50% -10%, oklch(0.27 0.006 286.033 / 0.55), transparent 55%);
+    background-image: radial-gradient(120% 80% at 50% -10%, oklch(0.3 0.006 286.033 / 0.55), transparent 55%);
     background-attachment: fixed;
   }
   body::before {

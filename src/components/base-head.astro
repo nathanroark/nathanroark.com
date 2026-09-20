@@ -1,5 +1,4 @@
 ---
-import { ClientRouter } from "astro:transitions";
 // import { jsx } from 'astro/jsx-runtime'
 // declare global {
 //   namespace JSX {
@@ -43,12 +42,11 @@ const { title, description, ogImage } = Astro.props;
   <!-- <meta property="og:url" content={canonicalURL} /> -->
   <meta property="og:title" content={title} />
   <meta property="og:description" content={description} />
-  <meta property="og:image" content={ogImage} />
+  {ogImage && <meta property="og:image" content={ogImage} />}
 
   <meta property="twitter:card" content="summary_large_image" />
   <!-- <meta property="twitter:url" content={canonicalURL} /> -->
   <meta property="twitter:title" content={title} />
   <meta property="twitter:description" content={description} />
-  <meta property="twitter:image" content={ogImage} />
+  {ogImage && <meta property="twitter:image" content={ogImage} />}
 </head>
-<ClientRouter />

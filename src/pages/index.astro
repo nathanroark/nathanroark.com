@@ -31,10 +31,12 @@ const musicPosts =
       ];
 
 // Movies: Top rated
-const moviePosts = (await getCollection("movies")).sort(sortByScore).slice(0, ITEMS_PER_SECTION);
+const allMovies = await getCollection("movies");
+const moviePosts = [...allMovies].sort(sortByScore).slice(0, ITEMS_PER_SECTION);
 
 // Anime: Most recent
-const animePosts = (await getCollection("anime"))
+const allAnime = await getCollection("anime");
+const animePosts = [...allAnime]
   .sort((a, b) => {
     const getDate = (x: any) => x.data.releaseDate ?? x.data.startDate;
     const ad = getDate(a),
@@ -47,7 +49,8 @@ const animePosts = (await getCollection("anime"))
   .slice(0, ITEMS_PER_SECTION);
 
 // Books: Most recently read
-const bookPosts = (await getCollection("books")).sort((a, b) => sortByDate(a, b, "read")).slice(0, ITEMS_PER_SECTION);
+const allBooks = await getCollection("books");
+const bookPosts = [...allBooks].sort((a, b) => sortByDate(a, b, "read")).slice(0, ITEMS_PER_SECTION);
 ---
 
 <Layout title={siteConfig.title} description={siteConfig.description}>
@@ -57,9 +60,15 @@ const bookPosts = (await getCollection("books")).sort((a, b) => sortByDate(a, b,
         {siteConfig.title}
       </h1>
     </header>
-    <HomeSection title="Music" href="/music" posts={musicPosts} type="music" />
-    <HomeSection title="Books" href="/books" posts={bookPosts} type="books" />
-    <HomeSection title="Movies" href="/movies" posts={moviePosts} type="movies" />
-    <HomeSection title="Anime" href="/anime" posts={animePosts} type="anime" />
+    <HomeSection title="Music" href="/music" meta={`All ${allAlbums.length} albums`} posts={musicPosts} type="music" />
+    <HomeSection title="Books" href="/books" meta={`All ${allBooks.length} books`} posts={bookPosts} type="books" />
+    <HomeSection
+      title="Movies"
+      href="/movies"
+      meta={`All ${allMovies.length} films`}
+      posts={moviePosts}
+      type="movies"
+    />
+    <HomeSection title="Anime" href="/anime" meta={`All ${allAnime.length} series`} posts={animePosts} type="anime" />
   </div>
 </Layout>

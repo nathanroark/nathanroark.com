@@ -1,46 +1,37 @@
 ---
-import ArrowUpRight from "@/components/icons/arrow-up-right.astro";
-
 interface Props {
   /** Section / page title */
   title: string;
-  /** Optional link target — makes the title itself a link */
-  href?: string;
   /** Small muted label on the right (e.g. an item count) */
   meta?: string;
+  /** When set, `meta` becomes the link through to the full collection */
+  href?: string;
   /** Tag for the heading element */
   as?: "h1" | "h2";
 }
 
-const { title, href, meta, as: Tag = "h2" } = Astro.props as Props;
+const { title, meta, href, as: Tag = "h2" } = Astro.props as Props;
 const sizeClass = Tag === "h1" ? "text-4xl md:text-5xl" : "text-3xl md:text-4xl";
 ---
 
-<div class="flex items-end justify-between">
-  <Tag class={`font-bold tracking-tight ${sizeClass}`}>
-    {
-      href ? (
+<div class="flex items-end justify-between gap-4">
+  <Tag class={`font-bold tracking-tight ${sizeClass}`}>{title}</Tag>
+
+  {
+    meta &&
+      (href ? (
         <a
           href={href}
-          aria-label={`View all ${title}`}
-          class="group/sh focus-visible:ring-offset-background relative inline-flex items-baseline gap-2 rounded-sm focus-visible:ring-2 focus-visible:ring-cyan-400/70 focus-visible:ring-offset-4 focus-visible:outline-none"
+          class="group focus-visible:ring-offset-background shrink-0 rounded-sm pb-1.5 text-sm text-white/60 transition-colors hover:text-white focus-visible:ring-2 focus-visible:ring-cyan-400/70 focus-visible:ring-offset-4 focus-visible:outline-none"
         >
-          {title}
-          {/* Resting arrow is the "this goes somewhere" cue — visible before any hover. */}
-          <ArrowUpRight
-            size=32
-            class="self-center text-white/35 transition-all duration-300 group-hover/sh:translate-x-0.5 group-hover/sh:-translate-y-0.5 group-hover/sh:text-white"
-          />
-          <span
-            class="pointer-events-none absolute -bottom-1 left-0 h-0.5 w-0 bg-linear-to-r from-blue-500 to-cyan-400 transition-all duration-300 group-hover/sh:w-full"
-            aria-hidden="true"
-          />
+          {meta}
+          {/* Decoration — the label already says where this goes. */}
+          <span class="inline-block transition-transform group-hover:translate-x-0.5" aria-hidden="true">
+            &#8594;
+          </span>
         </a>
       ) : (
-        title
-      )
-    }
-  </Tag>
-
-  {meta && <span class="shrink-0 pb-1.5 text-sm text-white/40">{meta}</span>}
+        <span class="shrink-0 pb-1.5 text-sm text-white/40">{meta}</span>
+      ))
+  }
 </div>

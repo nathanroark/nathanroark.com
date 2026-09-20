@@ -6,11 +6,13 @@ import { movieCredit } from "@/lib/utils";
 interface Props {
   title: string;
   href: string;
+  /** Right-hand link label, e.g. "All 172 albums" */
+  meta: string;
   posts: any[];
   type: "music" | "movies" | "anime" | "books";
 }
 
-const { title, href, posts, type } = Astro.props;
+const { title, href, meta, posts, type } = Astro.props;
 
 // Every collection spells its cover art, title and byline differently, so each
 // one gets a reader. Everything past this point is the same card.
@@ -26,14 +28,12 @@ const shape = type === "music" ? "square" : "poster";
 ---
 
 <section class="space-y-4">
-  <SectionHeader title={title} href={href} />
+  <SectionHeader title={title} href={href} meta={meta} />
 
   <div class="grid grid-cols-3 gap-2 sm:grid-cols-4 md:grid-cols-6 md:gap-3">
     {
       posts.map((post: any) => {
         const item = read(post.data);
-        // The transition name must match the detail page, which names its hero
-        // image `transition-<slug>` — otherwise the morph never pairs up.
         return (
           <MediaCard
             href={`/${type}/${post.id}`}
@@ -42,7 +42,6 @@ const shape = type === "music" ? "square" : "poster";
             title={item.title}
             subtitle={item.subtitle}
             shape={shape}
-            transitionName={`transition-${post.id}`}
             ariaLabel={item.subtitle ? `${item.title} ${item.by} ${item.subtitle}` : item.title}
           />
         );

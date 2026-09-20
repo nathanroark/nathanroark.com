@@ -31,7 +31,6 @@ const posts = (await getCollection("anime")).sort((a, b) => {
             imgAlt={post.data.title}
             title={post.data.title}
             subtitle={post.data.studio}
-            transitionName={`transition-${post.id}`}
             ariaLabel={`${post.data.title} by ${post.data.studio}`}
           />
         ))

@@ -23,7 +23,6 @@ const posts = (await getCollection("books")).sort((a, b) =>
             imgAlt={post.data.title}
             title={post.data.title}
             subtitle={post.data.author}
-            transitionName={`transition-${post.id}`}
             ariaLabel={`${post.data.title} by ${post.data.author}`}
           />
         ))

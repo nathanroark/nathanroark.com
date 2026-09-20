@@ -56,7 +56,6 @@ const periods = Object.keys(moviesByPeriod).sort((a, b) => parseInt(b) - parseIn
                 imgAlt={post.data.title}
                 title={post.data.title}
                 subtitle={movieCredit(post.data)}
-                transitionName={`transition-${post.id}`}
                 ariaLabel={
                   movieCredit(post.data) ? `${post.data.title} directed by ${movieCredit(post.data)}` : post.data.title
                 }
