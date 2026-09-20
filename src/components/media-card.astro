@@ -51,9 +51,9 @@ const label = ariaLabel ?? (subtitle ? `${title}, ${subtitle}` : title);
   {/* Tailwind gates group-hover behind (hover: hover), so touch never sees this. */}
   <div
     aria-hidden="true"
-    class="pointer-events-none absolute inset-x-0 bottom-0 bg-black/65 p-2 opacity-0 transition-opacity group-hover:opacity-100 group-focus-visible:opacity-100"
+    class="pointer-events-none absolute inset-x-0 bottom-0 bg-black/80 p-2 opacity-0 transition-opacity group-hover:opacity-100 group-focus-visible:opacity-100"
   >
-    <p class="line-clamp-2 text-sm text-white">{title}</p>
-    {subtitle && <p class="truncate text-xs text-white/60">{subtitle}</p>}
+    <p class="line-clamp-2 text-[10px] text-white">{title}</p>
+    {subtitle && <p class="truncate text-[10px] text-white/60">{subtitle}</p>}
   </div>
 </a>
