@@ -7,6 +7,8 @@
 //     }
 //   }
 // }
+//
+import { ClientRouter } from "astro:transitions";
 
 import "@/styles/global.css";
 
@@ -48,5 +50,10 @@ const { title, description, ogImage } = Astro.props;
   <!-- <meta property="twitter:url" content={canonicalURL} /> -->
   <meta property="twitter:title" content={title} />
   <meta property="twitter:description" content={description} />
+
+  <!-- View Transitions for smooth transitions between pages -->
+  <!----------------------------------------------------------->
+  <ClientRouter />
+  <!----------------------------------------------------------->
   {ogImage && <meta property="twitter:image" content={ogImage} />}
 </head>
