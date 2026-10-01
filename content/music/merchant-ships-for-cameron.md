@@ -1,11 +1,11 @@
 ---
-artist: 'Merchant Ships'
-album: 'For Cameron'
-release_date: '2010-04-09'
-genres: ['Screamo', 'Midwest Emo']
-cover_art_url: '/assets/music/merchant-ships-for-cameron.jpg'
-post_date: '2022-01-01'
-score: 9
+artist: "Merchant Ships"
+album: "For Cameron"
+release_date: "2010-04-09"
+genres: ["Screamo", "Midwest Emo"]
+cover_art_url: "/assets/music/merchant-ships-for-cameron.jpg"
+post_date: "2022-01-01"
+score: 9.5
 ---
 
 ## Track Listing
